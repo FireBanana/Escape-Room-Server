@@ -1,0 +1,15 @@
+﻿<Window x:Class="Unity_Escape_Room_Server_WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Unity_Escape_Room_Server_WPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <ListBox x:Name="ClientListBox" HorizontalAlignment="Left" Height="272" Margin="29,98,0,0" VerticalAlignment="Top" Width="733"/>
+        <Label x:Name="IpAddressText" Content="Address" HorizontalAlignment="Left" Margin="130,28,0,0" VerticalAlignment="Top" Width="168" RenderTransformOrigin="2.312,0.398"/>
+        <Label Content="Server Address:" HorizontalAlignment="Left" Margin="29,28,0,0" VerticalAlignment="Top" Width="96"/>
+        <Label Content="Teams:" HorizontalAlignment="Left" Margin="298,53,0,0" VerticalAlignment="Top" Width="181" FontSize="22" FontWeight="Bold" HorizontalContentAlignment="Center"/>
+    </Grid>
+</Window>
