@@ -1,0 +1,13 @@
+﻿<Window x:Class="Unity_Escape_Room_Server_WPF.LobbyScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Unity_Escape_Room_Server_WPF"
+        mc:Ignorable="d"
+        Title="LobbyScreen" Height="450" Width="800" ResizeMode="NoResize" WindowState="Maximized" WindowStyle="None">
+    <Grid>
+        <Label Content="Weirder Stuff" HorizontalAlignment="Left" Margin="188,10,0,0" VerticalAlignment="Top" Width="410" FontSize="48" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+
+    </Grid>
+</Window>

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
     public class AuthenticationResponsePacket : Packet
     {
-        public string TeamName;
 
         public AuthenticationResponsePacket(string teamName)
         {

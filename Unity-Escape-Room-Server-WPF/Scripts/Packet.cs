@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 public class Packet
 {
     public string PacketId;
-    public string Message;
+    public string TeamName;
     public enum Type
     {
         Authentication, HintRequest, PointsUpdate, HelpRequest, PauseGame

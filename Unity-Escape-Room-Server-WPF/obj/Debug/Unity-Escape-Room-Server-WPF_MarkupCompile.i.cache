@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-E:\UnityProjects\Unity-Escape-Room-Server-WPF\Unity-Escape-Room-Server-WPF\obj\Debug\
+E:\UnityProjects\EscapeRoomServer\Escape-Room-Server\Unity-Escape-Room-Server-WPF\obj\Debug\
 Unity_Escape_Room_Server_WPF
 none
 false
 DEBUG;TRACE
-E:\UnityProjects\Unity-Escape-Room-Server-WPF\Unity-Escape-Room-Server-WPF\App.xaml
-11151548125
+E:\UnityProjects\EscapeRoomServer\Escape-Room-Server\Unity-Escape-Room-Server-WPF\App.xaml
+3-765848358
 
-172009064432
-141781354640
-MainWindow.xaml;
+22-1708496733
+141699840674
+Windows\LobbyScreen.xaml;Windows\MainWindow.xaml;Windows\TeamWindow.xaml;
 
 True
 

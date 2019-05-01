@@ -23,26 +23,7 @@ namespace Unity_Escape_Room_Server_WPF
     public partial class MainWindow : Window
     {
         NetworkHandler handler;
-        Dictionary<TcpClient, int> TeamListDictionary = new Dictionary<TcpClient, int>();
-
-        void AddToList(string name, TcpClient client)
-        {
-            var pos = ClientListBox.Items.Add(name);
-            TeamListDictionary.Add(client, pos);
-        }
-
-        void RemoveFromList(TcpClient client)
-        {
-            if(TeamListDictionary.ContainsKey(client))
-            {
-                ClientListBox.Items.RemoveAt(TeamListDictionary[client]);
-                TeamListDictionary.Remove(client);
-            }
-            else
-            {
-                MessageBox.Show("Team is not in list but trying to be removed");
-            }
-        }
+        Dictionary<TcpClient, int> TeamListDictionary = new Dictionary<TcpClient, int>();        
 
         public MainWindow()
         {
@@ -59,7 +40,7 @@ namespace Unity_Escape_Room_Server_WPF
                     {
                         AddToList(newTeamName, newClient);
                     });
-                    ClientListBox.Dispatcher.BeginInvoke(del, new object[] { teamName });
+                    ClientListBox.Dispatcher.BeginInvoke(del, new object[] { teamName, client });
                 }
                 else
                 {
@@ -81,6 +62,44 @@ namespace Unity_Escape_Room_Server_WPF
                     RemoveFromList(client);
                 }
             };
+        }
+
+        void AddToList(string name, TcpClient client)
+        {
+            var pos = ClientListBox.Items.Add(name);
+            TeamListDictionary.Add(client, pos);
+        }
+
+        void RemoveFromList(TcpClient client)
+        {
+            if (TeamListDictionary.ContainsKey(client))
+            {
+                ClientListBox.Items.RemoveAt(TeamListDictionary[client]);
+                TeamListDictionary.Remove(client);
+            }
+            else
+            {
+                MessageBox.Show("Team is not in list but trying to be removed");
+            }
+        }
+
+        private void OnTeamListDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if(ClientListBox.SelectedItem == null)
+            {
+                MessageBox.Show("No item selected");
+                return;
+            }
+
+            if(WindowManager.IsWindowOpen((string)ClientListBox.SelectedItem))
+            {
+                MessageBox.Show("This teams window is already open");
+                return;
+            }
+            
+            var newTeamWindow = new Unity_Escape_Room_Server_WPF.Windows.TeamWindow(handler.TeamsList[(string)ClientListBox.SelectedItem]);
+            WindowManager.SetWindowOpenState((string)ClientListBox.SelectedItem, true, newTeamWindow);
+            newTeamWindow.Show();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EscapeRoomServer.PacketCommands;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,13 +11,14 @@ using System.Windows;
 
 namespace Unity_Escape_Room_Server_WPF
 {
-    class NetworkHandler
+    public class NetworkHandler
     {
         public const int PORT = 2000;
         TcpListener listener;
 
-        public List<TcpClient> ClientList = new List<TcpClient>();
         public string IpAddress;
+
+        public Dictionary<string, Team> TeamsList = new Dictionary<string, Team>();
 
         //Events
         public delegate void ClientConnectionCallback(string teamName, TcpClient client);
@@ -53,7 +55,6 @@ namespace Unity_Escape_Room_Server_WPF
 
         void OnClientConnect(TcpClient client)
         {
-            ClientList.Add(client);
             BeginClientListener(client);            
         }
 
@@ -86,21 +87,37 @@ namespace Unity_Escape_Room_Server_WPF
                             try
                             {
                                 var packet = JsonConvert.DeserializeObject<Packet>(Encoding.ASCII.GetString(buffer));
-                                //MessageBox.Show("Received Message: " + packet.PacketId);
 
                                 switch (packet.PacketId)
                                 {
                                     case "authentication":
-                                        var authPacket = (AuthenticationPacket)packet;
+                                        var authPacket = JsonConvert.DeserializeObject<AuthenticationPacket>(Encoding.ASCII.GetString(buffer));
                                         SendAuthenticationResponse(client, "null");
                                         OnClientConnected.Invoke(authPacket.TeamName, client);
+
+                                        if (!TeamsList.ContainsKey(authPacket.TeamName))
+                                        {
+                                            TeamsList.Add(authPacket.TeamName, new Team(authPacket.TeamName));
+                                        }
+
+                                        break;
+                                    case "pointsUpdate":
+                                        var pointsPacket = JsonConvert.DeserializeObject<PointsUpdatePacket>(Encoding.ASCII.GetString(buffer));
+                                        if (TeamsList.ContainsKey(pointsPacket.TeamName))
+                                        {
+                                            TeamsList[pointsPacket.TeamName].UpdatePoints(pointsPacket.NewPoints);
+                                        }
+                                        else
+                                            MessageBox.Show("Trying to update points of non-existant team");
+
+
                                         break;
                                 }
                                 
                             }
-                            catch
+                            catch (Exception e)
                             {
-                                //MessageBox.Show("Could not deserialize");
+                                MessageBox.Show(e.Message);
                             }
                         }
                         catch (Exception e)

@@ -5,10 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-    class AuthenticationPacket : Packet
+    public class AuthenticationPacket : Packet
     {
-        public string TeamName;
-
         public AuthenticationPacket(string teamName)
         {
             PacketId = "authentication";

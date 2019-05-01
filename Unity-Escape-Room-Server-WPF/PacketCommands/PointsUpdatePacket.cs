@@ -4,13 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EscapeRoomServer.PacketCommands
-{
+
     public class PointsUpdatePacket : Packet
     {
-        public PointsUpdatePacket()
+        public int NewPoints;
+
+        public PointsUpdatePacket(string teamName, int points)
         {
             PacketId = "pointsUpdate";
+            NewPoints = points;
+            TeamName = teamName;
         }
     }
-}
+
