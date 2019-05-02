@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="PacketCommands\HintResponsePacket.cs" />
     <Compile Include="Scripts\Team.cs" />
     <Compile Include="Scripts\Utilities.cs" />
     <Compile Include="Scripts\WindowManager.cs" />

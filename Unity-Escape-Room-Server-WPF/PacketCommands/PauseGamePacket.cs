@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EscapeRoomServer.PacketCommands
+
+public class PauseGamePacket : Packet
 {
-    public class PauseGamePacket : Packet
+    public bool IsPaused;
+
+    public PauseGamePacket(string teamName, bool isPaused)
     {
-        public PauseGamePacket()
-        {
-            PacketId = "pauseGame";
-        }
+        PacketId = "pauseGame";
+        IsPaused = isPaused;
+        TeamName = teamName;
     }
 }

@@ -21,6 +21,7 @@ namespace Unity_Escape_Room_Server_WPF.Windows
     public partial class TeamWindow : Window
     {
         public string TeamName;
+        Team currentTeam;
 
         public TeamWindow(Team team)
         {
@@ -30,6 +31,8 @@ namespace Unity_Escape_Room_Server_WPF.Windows
             TeamNameText.Content = team.Name;
             TimeRemainingText.Content = team.FormattedTime;
             ScoreText.Content = team.Score;
+
+            currentTeam = team;
 
             FinalChoiceText.Content = team.FinalChoice;
             FinalTimeText.Content = team.FinalTime;
@@ -58,6 +61,42 @@ namespace Unity_Escape_Room_Server_WPF.Windows
             {
                 ScoreText.Dispatcher.Invoke(() => { ScoreText.Content = text; });
             }
+        }
+
+        private void OnPreMadeHintSend(object sender, RoutedEventArgs e)
+        {
+            if(HintListBox.SelectedItem != null)
+            {
+                var hint = (string)HintListBox.SelectedItem;
+                NetworkHandler.Instance.SendHintResponse(TeamName, hint);
+            }
+        }
+
+        private void OnCustomHintSend(object sender, RoutedEventArgs e)
+        {
+            if(string.IsNullOrEmpty(HintTextBox.Text))
+            {
+                var hint = HintTextBox.Text;
+                NetworkHandler.Instance.SendHintResponse(TeamName, hint);
+            }
+            else
+            {
+                MessageBox.Show("Please enter hint");
+            }
+        }
+
+        private void OnPauseClick(object sender, RoutedEventArgs e)
+        {
+            if(currentTeam.IsPaused)
+            {
+                currentTeam.IsPaused = false;
+            }
+            else
+            {
+                currentTeam.IsPaused = true;
+            }
+
+            NetworkHandler.Instance.SendPauseCommand(TeamName, currentTeam.IsPaused);
         }
     }
 }

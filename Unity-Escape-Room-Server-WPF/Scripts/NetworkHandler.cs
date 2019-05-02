@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Linq;
 
 namespace Unity_Escape_Room_Server_WPF
 {
@@ -16,9 +17,12 @@ namespace Unity_Escape_Room_Server_WPF
         public const int PORT = 2000;
         TcpListener listener;
 
+        public static NetworkHandler Instance;
+
         public string IpAddress;
 
         public Dictionary<string, Team> TeamsList = new Dictionary<string, Team>();
+        public Dictionary<string, TcpClient> ClientList = new Dictionary<string, TcpClient>();
 
         //Events
         public delegate void ClientConnectionCallback(string teamName, TcpClient client);
@@ -37,6 +41,7 @@ namespace Unity_Escape_Room_Server_WPF
                 }
             }
 
+            Instance = this;
             listener.Start();
             BeginExecutingClientConnectListener();
         }
@@ -72,6 +77,36 @@ namespace Unity_Escape_Room_Server_WPF
             client.GetStream().Write(buff, 0, buff.Length);
         }
 
+        public void SendHintResponse(string teamName, string hintDescription)
+        {
+            if(ClientList.ContainsKey(teamName))
+            {
+                var packet = new HintResponsePacket(teamName, hintDescription);
+                var serializedPacket = JsonConvert.SerializeObject(packet);
+                var buff = Encoding.ASCII.GetBytes(serializedPacket);
+                ClientList[teamName].GetStream().Write(buff, 0, buff.Length);
+            }
+            else
+            {
+                MessageBox.Show("Trying to send a hint to a team that does not exist");
+            }
+        }
+
+        public void SendPauseCommand(string teamName, bool isPaused)
+        {
+            if (ClientList.ContainsKey(teamName))
+            {
+                var packet = new PauseGamePacket(teamName, isPaused);
+                var serializedPacket = JsonConvert.SerializeObject(packet);
+                var buff = Encoding.ASCII.GetBytes(serializedPacket);
+                ClientList[teamName].GetStream().Write(buff, 0, buff.Length);
+            }
+            else
+            {
+                MessageBox.Show("Trying to send pause to a team that does not exist");
+            }
+        }
+
         void BeginClientListener(TcpClient client)
         {
             Task.Run(() =>
@@ -100,6 +135,11 @@ namespace Unity_Escape_Room_Server_WPF
                                             TeamsList.Add(authPacket.TeamName, new Team(authPacket.TeamName));
                                         }
 
+                                        if(!ClientList.ContainsKey(authPacket.TeamName))
+                                        {
+                                            ClientList.Add(authPacket.TeamName, client);
+                                        }
+
                                         break;
                                     case "pointsUpdate":
                                         var pointsPacket = JsonConvert.DeserializeObject<PointsUpdatePacket>(Encoding.ASCII.GetString(buffer));
@@ -123,6 +163,7 @@ namespace Unity_Escape_Room_Server_WPF
                         catch (Exception e)
                         {
                             Debug.Print("Transfer Error: " + e.ToString());
+                            // TODO: Remove clients
                             OnClientDisconnect(client);
                             break;
                         }

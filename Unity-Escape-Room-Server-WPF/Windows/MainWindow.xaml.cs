@@ -23,11 +23,13 @@ namespace Unity_Escape_Room_Server_WPF
     public partial class MainWindow : Window
     {
         NetworkHandler handler;
-        Dictionary<TcpClient, int> TeamListDictionary = new Dictionary<TcpClient, int>();        
+        public Dictionary<TcpClient, int> TeamListDictionary = new Dictionary<TcpClient, int>();
+        public static MainWindow Instance;
 
         public MainWindow()
         {
             InitializeComponent();
+            Instance = this;
 
             handler = new NetworkHandler("localhost");
             IpAddressText.Content = handler.IpAddress + ":" + NetworkHandler.PORT;

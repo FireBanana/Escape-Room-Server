@@ -14,6 +14,7 @@ public class Team
     public int FinalChoice;
     public string FinalTime;
     public int HintsUsed;
+    public bool IsPaused;
 
     public int Time;
 

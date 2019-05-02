@@ -19,7 +19,7 @@
         <Label x:Name="FinalChoiceText" Content="0" HorizontalAlignment="Left" Margin="672,55,0,0" VerticalAlignment="Top" Width="57" FontSize="18"/>
         <Label x:Name="FinalScoreText" Content="0" HorizontalAlignment="Left" Margin="672,88,0,0" VerticalAlignment="Top" Width="57" FontSize="18"/>
         <Label x:Name="FinalTimeText" Content="0" HorizontalAlignment="Left" Margin="672,123,0,0" VerticalAlignment="Top" Width="57" FontSize="18"/>
-        <Button x:Name="PauseBtn" Content="Pause" HorizontalAlignment="Left" Margin="55,131,0,0" VerticalAlignment="Top" Width="156" Height="42"/>
+        <Button x:Name="PauseBtn" Content="Pause" HorizontalAlignment="Left" Margin="55,131,0,0" VerticalAlignment="Top" Width="156" Height="42" Click="OnPauseClick"/>
         <ListBox x:Name="HintListBox" HorizontalAlignment="Left" Height="141" Margin="55,242,0,0" VerticalAlignment="Top" Width="317">
             <System:String>This is a sample Hint</System:String>
             <System:String>This is another hint</System:String>
@@ -31,11 +31,11 @@
             <System:String>This is yet another hint</System:String>
             <System:String>This is yet another hint</System:String>
         </ListBox>
-        <Button x:Name="SendHintBtn" Content="Send" HorizontalAlignment="Left" Margin="216,404,0,0" VerticalAlignment="Top" Width="156" Height="42"/>
+        <Button x:Name="SendHintBtn" Content="Send" HorizontalAlignment="Left" Margin="216,404,0,0" VerticalAlignment="Top" Width="156" Height="42" Click="OnPreMadeHintSend"/>
         <Label Content="Pre-made hints:" HorizontalAlignment="Left" Margin="55,213,0,0" VerticalAlignment="Top" Width="156" FontSize="14" FontWeight="Bold" Height="20" Padding="0"/>
         <Button x:Name="HintbotReadyBtn" Content="Send Hintbot Ready" HorizontalAlignment="Left" Margin="519,162,0,0" VerticalAlignment="Top" Width="201" Height="42"/>
-        <Button x:Name="SendTypedHintBtn" Content="Send" HorizontalAlignment="Left" Margin="564,404,0,0" VerticalAlignment="Top" Width="156" Height="42"/>
-        <Label Content="Pre-made hints:" HorizontalAlignment="Left" Margin="403,218,0,0" VerticalAlignment="Top" Width="156" FontSize="14" FontWeight="Bold" Height="20" Padding="0"/>
+        <Button x:Name="SendTypedHintBtn" Content="Send" HorizontalAlignment="Left" Margin="564,404,0,0" VerticalAlignment="Top" Width="156" Height="42" Click="OnCustomHintSend"/>
+        <Label Content="Custom hints:" HorizontalAlignment="Left" Margin="403,218,0,0" VerticalAlignment="Top" Width="156" FontSize="14" FontWeight="Bold" Height="20" Padding="0"/>
         <TextBox x:Name="HintTextBox" HorizontalAlignment="Left" Height="141" Margin="403,242,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="326"/>
 
     </Grid>
