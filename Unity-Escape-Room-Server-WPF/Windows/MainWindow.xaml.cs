@@ -103,5 +103,18 @@ namespace Unity_Escape_Room_Server_WPF
             WindowManager.SetWindowOpenState((string)ClientListBox.SelectedItem, true, newTeamWindow);
             newTeamWindow.Show();
         }
+
+        private void OnLobbyClick(object sender, RoutedEventArgs e)
+        {
+            if (WindowManager.IsWindowOpen("lobby"))
+            {
+                MessageBox.Show("Lobby window is already open");
+                return;
+            }
+
+            var newLobbyWindow = new LobbyScreen();
+            WindowManager.SetWindowOpenState("lobby", true, newLobbyWindow);
+            newLobbyWindow.Show();
+        }
     }
 }

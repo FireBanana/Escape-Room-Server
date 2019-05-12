@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EscapeRoomServer.PacketCommands
+public class HintRequestPacket : Packet
 {
-    public class HintRequestPacket : Packet
+    public HintRequestPacket(string teamName)
     {
-        public HintRequestPacket()
-        {
-            PacketId = "hintRequest";
-        }
+        PacketId = "hintRequest";
+        TeamName = teamName;
     }
 }
+

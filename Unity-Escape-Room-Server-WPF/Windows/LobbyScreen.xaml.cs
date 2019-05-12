@@ -22,6 +22,23 @@ namespace Unity_Escape_Room_Server_WPF
         public LobbyScreen()
         {
             InitializeComponent();
+            LoadItemsToTable();
+
+        }
+
+        public void LoadItemsToTable()
+        {
+            var sortedList = NetworkHandler.Instance.TeamsList.OrderBy(x => x.Value.Score).Select(p => p.Value).ToList();
+
+            foreach (var client in sortedList)
+            {
+                TeamDataGrid.Items.Add(client);
+            }
+        }
+
+        private void OnWindowClosed(object sender, EventArgs e)
+        {
+            WindowManager.SetWindowOpenState("lobby", false, this);
         }
     }
 }

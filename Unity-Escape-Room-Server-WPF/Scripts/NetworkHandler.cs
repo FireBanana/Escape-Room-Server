@@ -23,6 +23,7 @@ namespace Unity_Escape_Room_Server_WPF
 
         public Dictionary<string, Team> TeamsList = new Dictionary<string, Team>();
         public Dictionary<string, TcpClient> ClientList = new Dictionary<string, TcpClient>();
+        public Dictionary<string, Team> CompletedTeamList = new Dictionary<string, Team>();
 
         //Events
         public delegate void ClientConnectionCallback(string teamName, TcpClient client);
@@ -150,7 +151,33 @@ namespace Unity_Escape_Room_Server_WPF
                                         else
                                             MessageBox.Show("Trying to update points of non-existant team");
 
+                                        break;
 
+                                    case "hintRequest":
+                                        var hintRequestPacket = JsonConvert.DeserializeObject<HintRequestPacket>(Encoding.ASCII.GetString(buffer));
+                                        MessageBox.Show("Hint Request Received");
+                                        break;
+
+                                    case "gameEnd":
+                                        var gameEndPacket = JsonConvert.DeserializeObject<GameEndPacket>(Encoding.ASCII.GetString(buffer));
+                                        TeamsList[gameEndPacket.TeamName].FinalChoice = gameEndPacket.FinalChoice;
+                                        TeamsList[gameEndPacket.TeamName].FinalTime = gameEndPacket.FinalTime;
+                                        
+                                        if(CompletedTeamList.ContainsKey(gameEndPacket.TeamName))
+                                        {
+                                            MessageBox.Show("Error: A team whose name already exists has completed the game.");
+                                        }
+                                        else
+                                        {
+                                            CompletedTeamList.Add(gameEndPacket.TeamName, TeamsList[gameEndPacket.TeamName]);
+                                            //TODO: remove from main window
+                                            if (WindowManager.IsWindowOpen("lobby"))
+                                            {
+                                                ((LobbyScreen)WindowManager.GetWindow("lobby")).LoadItemsToTable();
+                                            }
+
+                                            TeamsList.Remove(gameEndPacket.TeamName);
+                                        }
                                         break;
                                 }
                                 

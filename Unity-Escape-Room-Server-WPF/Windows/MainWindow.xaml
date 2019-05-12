@@ -11,5 +11,6 @@
         <Label x:Name="IpAddressText" Content="Address" HorizontalAlignment="Left" Margin="130,28,0,0" VerticalAlignment="Top" Width="168" RenderTransformOrigin="2.312,0.398"/>
         <Label Content="Server Address:" HorizontalAlignment="Left" Margin="29,28,0,0" VerticalAlignment="Top" Width="96"/>
         <Label Content="Teams:" HorizontalAlignment="Left" Margin="298,53,0,0" VerticalAlignment="Top" Width="181" FontSize="22" FontWeight="Bold" HorizontalContentAlignment="Center"/>
+        <Button x:Name="LobbyOpenBtn" Content="Button" HorizontalAlignment="Left" Margin="633,28,0,0" VerticalAlignment="Top" Width="129" Click="OnLobbyClick"/>
     </Grid>
 </Window>

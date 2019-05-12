@@ -8,11 +8,11 @@ using Unity_Escape_Room_Server_WPF.Windows;
 
 public class Team
 {
-    public string Name;
+    public string Name { get; set; }
     public string FormattedTime;
     public int Score;
-    public int FinalChoice;
-    public string FinalTime;
+    public string FinalChoice { get; set; }
+    public string FinalTime { get; set; }
     public int HintsUsed;
     public bool IsPaused;
 
