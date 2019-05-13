@@ -118,6 +118,9 @@ namespace Unity_Escape_Room_Server_WPF
                     {
                         try
                         {
+                            if (!client.GetStream().DataAvailable)
+                                continue;
+
                             var buffer = new byte[client.ReceiveBufferSize];
                             client.GetStream().Read(buffer, 0, buffer.Length);
                             try
@@ -184,13 +187,13 @@ namespace Unity_Escape_Room_Server_WPF
                             }
                             catch (Exception e)
                             {
-                                MessageBox.Show(e.Message);
+                                MessageBox.Show("Error: " + e.Message);
                             }
                         }
                         catch (Exception e)
                         {
                             Debug.Print("Transfer Error: " + e.ToString());
-                            // TODO: Remove clients
+                            // TODO: Remove clients                            
                             OnClientDisconnect(client);
                             break;
                         }

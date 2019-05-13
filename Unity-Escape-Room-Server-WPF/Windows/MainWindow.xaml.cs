@@ -50,7 +50,7 @@ namespace Unity_Escape_Room_Server_WPF
                 }
             };
             handler.OnClientDisconnected += (client) =>
-            {
+            {                
                 if (ClientListBox.Dispatcher.Thread != Thread.CurrentThread)
                 {
                     var del = new NetworkHandler.ClientDisconnectionCallback(newClient =>
@@ -69,13 +69,15 @@ namespace Unity_Escape_Room_Server_WPF
         void AddToList(string name, TcpClient client)
         {
             var pos = ClientListBox.Items.Add(name);
-            TeamListDictionary.Add(client, pos);
+            if(!TeamListDictionary.ContainsKey(client))
+                TeamListDictionary.Add(client, pos);
         }
 
         void RemoveFromList(TcpClient client)
         {
             if (TeamListDictionary.ContainsKey(client))
             {
+                MessageBox.Show("Remove");
                 ClientListBox.Items.RemoveAt(TeamListDictionary[client]);
                 TeamListDictionary.Remove(client);
             }

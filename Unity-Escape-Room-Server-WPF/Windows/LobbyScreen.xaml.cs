@@ -40,5 +40,10 @@ namespace Unity_Escape_Room_Server_WPF
         {
             WindowManager.SetWindowOpenState("lobby", false, this);
         }
+
+        private void OnDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            LobbyWindow.WindowState = WindowState.Maximized;
+        }
     }
 }
