@@ -74,6 +74,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="PacketCommands\GameEndPacket.cs" />
+    <Compile Include="PacketCommands\GameQuitPacket.cs" />
     <Compile Include="PacketCommands\HintResponsePacket.cs" />
     <Compile Include="Scripts\Team.cs" />
     <Compile Include="Scripts\Utilities.cs" />

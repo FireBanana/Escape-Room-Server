@@ -6,14 +6,14 @@
         xmlns:local="clr-namespace:Unity_Escape_Room_Server_WPF"
         xmlns:System="clr-namespace:System;assembly=mscorlib" x:Name="LobbyWindow" x:Class="Unity_Escape_Room_Server_WPF.LobbyScreen"
         mc:Ignorable="d"
-        Title="LobbyScreen" Height="450" Width="800" WindowStyle="None" Closed="OnWindowClosed" MouseDoubleClick="OnDoubleClick" WindowState="Maximized" ResizeMode="NoResize" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+        Title="LobbyScreen" Height="450" Width="800" WindowStyle="None" Closed="OnWindowClosed" MouseDoubleClick="OnDoubleClick" WindowState="Maximized" ResizeMode="NoResize" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" MouseDown="OnMouseDown">
     <Grid>
         <Label Content="Weirder Stuff" Margin="188,12,186,361.6" FontSize="48" HorizontalContentAlignment="Center" FontWeight="Bold" RenderTransformOrigin="0.439,0.539" VerticalContentAlignment="Stretch"/>
         <DataGrid x:Name="TeamDataGrid" Margin="38,89,32,30.6" GridLinesVisibility="Horizontal" BorderThickness="0" Background="#00F0F0F0" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Padding="0">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Name}" Header="Team Name:" FontSize="24" Foreground="Black" Width="450"/>
-                <DataGridTextColumn Binding="{Binding FinalTime}" Header="Time:" FontSize="24" Width="150"/>
-                <DataGridTextColumn Binding="{Binding FinalChoice}" Header="Score:" FontSize="24" Width="*"/>
+                <DataGridTextColumn Binding="{Binding FormattedElapsedTime}" Header="Time:" FontSize="24" Width="150"/>
+                <DataGridTextColumn Binding="{Binding Score}" Header="Score:" FontSize="24" Width="*"/>
             </DataGrid.Columns>
             <DataGrid.Resources>
                 <Style TargetType="{x:Type DataGridColumnHeader}">

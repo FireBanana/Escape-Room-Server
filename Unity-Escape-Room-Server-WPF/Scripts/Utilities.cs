@@ -9,6 +9,9 @@ public static class Utilities
     public static string SecondsToFormattedString(int seconds)
     {
         TimeSpan time = TimeSpan.FromSeconds(seconds);
-        return time.Minutes + ":" + time.Seconds;
+        if(time.Seconds > 10)
+            return time.Minutes + ":" + time.Seconds;
+        else
+            return time.Minutes + ":0" + time.Seconds;
     }
 }

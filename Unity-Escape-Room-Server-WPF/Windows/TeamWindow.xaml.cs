@@ -63,6 +63,16 @@ namespace Unity_Escape_Room_Server_WPF.Windows
             }
         }
 
+        public void UpdateFinalItems(string finalChoice, string finalScore, string finalTime)
+        {
+            TimeRemainingText.Dispatcher.Invoke(() =>
+            {
+                FinalChoiceText.Content = finalChoice;
+                FinalScoreText.Content = finalScore;
+                FinalTimeText.Content = finalTime;
+            });
+        }
+
         private void OnPreMadeHintSend(object sender, RoutedEventArgs e)
         {
             if(HintListBox.SelectedItem != null)
@@ -74,7 +84,7 @@ namespace Unity_Escape_Room_Server_WPF.Windows
 
         private void OnCustomHintSend(object sender, RoutedEventArgs e)
         {
-            if(string.IsNullOrEmpty(HintTextBox.Text))
+            if(!string.IsNullOrEmpty(HintTextBox.Text))
             {
                 var hint = HintTextBox.Text;
                 NetworkHandler.Instance.SendHintResponse(TeamName, hint);

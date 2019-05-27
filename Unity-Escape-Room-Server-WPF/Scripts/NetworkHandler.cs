@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace Unity_Escape_Room_Server_WPF
 {
@@ -22,6 +23,7 @@ namespace Unity_Escape_Room_Server_WPF
         public string IpAddress;
 
         public Dictionary<string, Team> TeamsList = new Dictionary<string, Team>();
+        public Dictionary<string, Team> LobbyTeamsList = new Dictionary<string, Team>();
         public Dictionary<string, TcpClient> ClientList = new Dictionary<string, TcpClient>();
         public Dictionary<string, Team> CompletedTeamList = new Dictionary<string, Team>();
 
@@ -112,6 +114,7 @@ namespace Unity_Escape_Room_Server_WPF
         {
             Task.Run(() =>
             {
+
                 while (true)
                 {
                     if (client.Connected)
@@ -136,7 +139,9 @@ namespace Unity_Escape_Room_Server_WPF
 
                                         if (!TeamsList.ContainsKey(authPacket.TeamName))
                                         {
-                                            TeamsList.Add(authPacket.TeamName, new Team(authPacket.TeamName));
+                                            var newTeam = new Team(authPacket.TeamName);
+                                            TeamsList.Add(authPacket.TeamName, newTeam);
+                                            LobbyTeamsList.Add(authPacket.TeamName, newTeam);
                                         }
 
                                         if(!ClientList.ContainsKey(authPacket.TeamName))
@@ -145,6 +150,11 @@ namespace Unity_Escape_Room_Server_WPF
                                         }
 
                                         break;
+                                    case "gameQuit":
+                                        var quitPacket = JsonConvert.DeserializeObject<GameQuitPacket>(Encoding.ASCII.GetString(buffer));
+                                        TeamsList[quitPacket.TeamName].Stop();
+                                        OnClientDisconnect(client);                                        
+                                        return;
                                     case "pointsUpdate":
                                         var pointsPacket = JsonConvert.DeserializeObject<PointsUpdatePacket>(Encoding.ASCII.GetString(buffer));
                                         if (TeamsList.ContainsKey(pointsPacket.TeamName))
@@ -164,7 +174,8 @@ namespace Unity_Escape_Room_Server_WPF
                                     case "gameEnd":
                                         var gameEndPacket = JsonConvert.DeserializeObject<GameEndPacket>(Encoding.ASCII.GetString(buffer));
                                         TeamsList[gameEndPacket.TeamName].FinalChoice = gameEndPacket.FinalChoice;
-                                        TeamsList[gameEndPacket.TeamName].FinalTime = gameEndPacket.FinalTime;
+                                        TeamsList[gameEndPacket.TeamName].Stop();                                        
+                                       //TeamsList[gameEndPacket.TeamName].FinalTime = gameEndPacket.FinalTime;
                                         
                                         if(CompletedTeamList.ContainsKey(gameEndPacket.TeamName))
                                         {
@@ -173,7 +184,7 @@ namespace Unity_Escape_Room_Server_WPF
                                         else
                                         {
                                             CompletedTeamList.Add(gameEndPacket.TeamName, TeamsList[gameEndPacket.TeamName]);
-                                            //TODO: remove from main window
+                                            MainWindow.Instance.RemoveFromList(client);
                                             if (WindowManager.IsWindowOpen("lobby"))
                                             {
                                                 ((LobbyScreen)WindowManager.GetWindow("lobby")).LoadItemsToTable();
@@ -192,8 +203,7 @@ namespace Unity_Escape_Room_Server_WPF
                         }
                         catch (Exception e)
                         {
-                            Debug.Print("Transfer Error: " + e.ToString());
-                            // TODO: Remove clients                            
+                            Debug.Print("Transfer Error: " + e.ToString());                   
                             OnClientDisconnect(client);
                             break;
                         }

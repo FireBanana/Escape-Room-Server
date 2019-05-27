@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Unity_Escape_Room_Server_WPF
 {
@@ -25,6 +14,8 @@ namespace Unity_Escape_Room_Server_WPF
         NetworkHandler handler;
         public Dictionary<TcpClient, int> TeamListDictionary = new Dictionary<TcpClient, int>();
         public static MainWindow Instance;
+
+        delegate void UICallback();
 
         public MainWindow()
         {
@@ -50,7 +41,7 @@ namespace Unity_Escape_Room_Server_WPF
                 }
             };
             handler.OnClientDisconnected += (client) =>
-            {                
+            {
                 if (ClientListBox.Dispatcher.Thread != Thread.CurrentThread)
                 {
                     var del = new NetworkHandler.ClientDisconnectionCallback(newClient =>
@@ -69,17 +60,49 @@ namespace Unity_Escape_Room_Server_WPF
         void AddToList(string name, TcpClient client)
         {
             var pos = ClientListBox.Items.Add(name);
-            if(!TeamListDictionary.ContainsKey(client))
+            if (!TeamListDictionary.ContainsKey(client))
                 TeamListDictionary.Add(client, pos);
         }
 
-        void RemoveFromList(TcpClient client)
+        public void RemoveFromList(TcpClient client)
         {
             if (TeamListDictionary.ContainsKey(client))
             {
-                MessageBox.Show("Remove");
-                ClientListBox.Items.RemoveAt(TeamListDictionary[client]);
-                TeamListDictionary.Remove(client);
+                if (ClientListBox.Dispatcher.Thread != Thread.CurrentThread)
+                {
+                    var del = new UICallback(() =>
+                    {
+                        ClientListBox.Items.RemoveAt(TeamListDictionary[client]);
+                        if(handler.ClientList.ContainsValue(client))
+                        {
+                            foreach(var item in handler.ClientList)
+                            {
+                                if(item.Value == client)
+                                {
+                                    handler.TeamsList.Remove(item.Key);
+                                }
+                            }
+                        }                        
+                        TeamListDictionary.Remove(client);
+                    });
+                    ClientListBox.Dispatcher.BeginInvoke(del, null);
+                }
+                else
+                {
+                    ClientListBox.Items.RemoveAt(TeamListDictionary[client]);
+                    if (handler.ClientList.ContainsValue(client))
+                    {
+                        foreach (var item in handler.ClientList)
+                        {
+                            if (item.Value == client)
+                            {
+                                handler.TeamsList.Remove(item.Key);
+                            }
+                        }
+                    }
+                    TeamListDictionary.Remove(client);
+                }
+
             }
             else
             {
@@ -89,18 +112,18 @@ namespace Unity_Escape_Room_Server_WPF
 
         private void OnTeamListDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if(ClientListBox.SelectedItem == null)
+            if (ClientListBox.SelectedItem == null)
             {
                 MessageBox.Show("No item selected");
                 return;
             }
 
-            if(WindowManager.IsWindowOpen((string)ClientListBox.SelectedItem))
+            if (WindowManager.IsWindowOpen((string)ClientListBox.SelectedItem))
             {
                 MessageBox.Show("This teams window is already open");
                 return;
             }
-            
+
             var newTeamWindow = new Unity_Escape_Room_Server_WPF.Windows.TeamWindow(handler.TeamsList[(string)ClientListBox.SelectedItem]);
             WindowManager.SetWindowOpenState((string)ClientListBox.SelectedItem, true, newTeamWindow);
             newTeamWindow.Show();
@@ -117,6 +140,11 @@ namespace Unity_Escape_Room_Server_WPF
             var newLobbyWindow = new LobbyScreen();
             WindowManager.SetWindowOpenState("lobby", true, newLobbyWindow);
             newLobbyWindow.Show();
+        }
+
+        private void OnLobbyClear(object sender, RoutedEventArgs e)
+        {
+            handler.LobbyTeamsList.Clear();
         }
     }
 }
