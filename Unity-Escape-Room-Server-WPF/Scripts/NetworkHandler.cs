@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Linq;
 using System.Net.NetworkInformation;
+using Unity_Escape_Room_Server_WPF.Windows;
 
 namespace Unity_Escape_Room_Server_WPF
 {
@@ -23,7 +24,7 @@ namespace Unity_Escape_Room_Server_WPF
         public string IpAddress;
 
         public Dictionary<string, Team> TeamsList = new Dictionary<string, Team>();
-        public Dictionary<string, Team> LobbyTeamsList = new Dictionary<string, Team>();
+        //public Dictionary<string, Team> LobbyTeamsList = new Dictionary<string, Team>();
         public Dictionary<string, TcpClient> ClientList = new Dictionary<string, TcpClient>();
         public Dictionary<string, Team> CompletedTeamList = new Dictionary<string, Team>();
 
@@ -82,6 +83,12 @@ namespace Unity_Escape_Room_Server_WPF
 
         public void SendHintResponse(string teamName, string hintDescription)
         {
+            if(WindowManager.IsWindowOpen("scoreboard"))
+            {
+                var window = (RoomScoreboard)WindowManager.GetWindow("scoreboard");
+                window.DisplayMessage(hintDescription);
+            }
+
             if(ClientList.ContainsKey(teamName))
             {
                 var packet = new HintResponsePacket(teamName, hintDescription);
@@ -141,7 +148,7 @@ namespace Unity_Escape_Room_Server_WPF
                                         {
                                             var newTeam = new Team(authPacket.TeamName);
                                             TeamsList.Add(authPacket.TeamName, newTeam);
-                                            LobbyTeamsList.Add(authPacket.TeamName, newTeam);
+                                            //LobbyTeamsList.Add(authPacket.TeamName, newTeam);
                                         }
 
                                         if(!ClientList.ContainsKey(authPacket.TeamName))
@@ -150,7 +157,7 @@ namespace Unity_Escape_Room_Server_WPF
                                         }
 
                                         break;
-                                    case "gameQuit":
+                                    case "gameQuit":                                        
                                         var quitPacket = JsonConvert.DeserializeObject<GameQuitPacket>(Encoding.ASCII.GetString(buffer));
                                         TeamsList[quitPacket.TeamName].Stop();
                                         OnClientDisconnect(client);                                        
@@ -169,6 +176,11 @@ namespace Unity_Escape_Room_Server_WPF
                                     case "hintRequest":
                                         var hintRequestPacket = JsonConvert.DeserializeObject<HintRequestPacket>(Encoding.ASCII.GetString(buffer));
                                         MessageBox.Show("Hint Request Received");
+                                        break;
+
+                                    case "helpRequest":
+                                        var helpRequestPacket = JsonConvert.DeserializeObject<HelpRequestPacket>(Encoding.ASCII.GetString(buffer));
+                                        MessageBox.Show("Help Request Received");
                                         break;
 
                                     case "gameEnd":

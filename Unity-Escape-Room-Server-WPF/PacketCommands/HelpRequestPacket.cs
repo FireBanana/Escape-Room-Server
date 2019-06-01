@@ -8,9 +8,9 @@ namespace EscapeRoomServer.PacketCommands
 {
     public class HelpRequestPacket : Packet
     {
-        public HelpRequestPacket()
+        public HelpRequestPacket(string teamName)
         {
-            PacketId = "helpRequest";
+            TeamName = teamName;
         }
     }
 }

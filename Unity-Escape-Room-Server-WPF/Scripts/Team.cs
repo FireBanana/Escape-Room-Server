@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using Unity_Escape_Room_Server_WPF;
 using Unity_Escape_Room_Server_WPF.Windows;
 
 public class Team
@@ -28,6 +29,25 @@ public class Team
         Time = 2700;
         timer.Elapsed += TimerElapsed;
         timer.Start();
+
+        //Start scoreboard
+        if (WindowManager.IsWindowOpen("scoreboard"))
+        {
+            var scoreboardWindow = (RoomScoreboard)WindowManager.GetWindow("scoreboard");
+            scoreboardWindow.Reset(this);
+            timer.Elapsed += scoreboardWindow.Tick;
+        }
+        else
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {                
+                var scoreboardWindow = new RoomScoreboard(this);
+                scoreboardWindow.Show();
+                WindowManager.SetWindowOpenState("scoreboard", true, scoreboardWindow);
+                scoreboardWindow.Reset(this);
+                timer.Elapsed += scoreboardWindow.Tick;
+            });
+        }
     }
 
     private void TimerElapsed(object sender, ElapsedEventArgs e)
@@ -68,6 +88,14 @@ public class Team
             var teamWindow = (TeamWindow)window;
 
             teamWindow.UpdateFinalItems(FinalChoice, Score.ToString(), FinalTime);
+            Database.AddEntry(Name, Score.ToString(), FinalTime);
+        }
+
+        if (WindowManager.IsWindowOpen("lobby"))
+        {
+            var window = WindowManager.GetWindow("lobby");
+            var lobbyWindow = (LobbyScreen)window;
+            lobbyWindow.LoadItemsToTable();
         }
     }
 

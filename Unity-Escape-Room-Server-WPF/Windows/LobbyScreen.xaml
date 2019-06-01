@@ -11,8 +11,8 @@
         <Label Content="Weirder Stuff" Margin="188,12,186,361.6" FontSize="48" HorizontalContentAlignment="Center" FontWeight="Bold" RenderTransformOrigin="0.439,0.539" VerticalContentAlignment="Stretch"/>
         <DataGrid x:Name="TeamDataGrid" Margin="38,89,32,30.6" GridLinesVisibility="Horizontal" BorderThickness="0" Background="#00F0F0F0" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Padding="0">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" Header="Team Name:" FontSize="24" Foreground="Black" Width="450"/>
-                <DataGridTextColumn Binding="{Binding FormattedElapsedTime}" Header="Time:" FontSize="24" Width="150"/>
+                <DataGridTextColumn Binding="{Binding TeamName}" Header="Team Name:" FontSize="24" Foreground="Black" Width="450"/>
+                <DataGridTextColumn Binding="{Binding Time}" Header="Time:" FontSize="24" Width="150"/>
                 <DataGridTextColumn Binding="{Binding Score}" Header="Score:" FontSize="24" Width="*"/>
             </DataGrid.Columns>
             <DataGrid.Resources>

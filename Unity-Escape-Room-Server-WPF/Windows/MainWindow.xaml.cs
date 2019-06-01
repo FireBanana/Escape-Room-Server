@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
+using Unity_Escape_Room_Server_WPF.Windows;
 
 namespace Unity_Escape_Room_Server_WPF
 {
@@ -142,9 +143,17 @@ namespace Unity_Escape_Room_Server_WPF
             newLobbyWindow.Show();
         }
 
-        private void OnLobbyClear(object sender, RoutedEventArgs e)
+        private void OnRoomScoreboard(object sender, RoutedEventArgs e)
         {
-            handler.LobbyTeamsList.Clear();
+            if(WindowManager.IsWindowOpen("scoreboard"))
+            {
+                MessageBox.Show("Room Scoreboard is already open");
+                return;
+            }
+
+            var newScoreboard = new RoomScoreboard(null);
+            WindowManager.SetWindowOpenState("lobby", true, newScoreboard);
+            newScoreboard.Show();
         }
     }
 }

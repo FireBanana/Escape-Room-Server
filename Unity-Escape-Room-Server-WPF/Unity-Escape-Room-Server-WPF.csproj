@@ -50,6 +50,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LiteDB, Version=4.1.4.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiteDB.4.1.4\lib\net40\LiteDB.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -76,9 +79,13 @@
     <Compile Include="PacketCommands\GameEndPacket.cs" />
     <Compile Include="PacketCommands\GameQuitPacket.cs" />
     <Compile Include="PacketCommands\HintResponsePacket.cs" />
+    <Compile Include="Scripts\Database.cs" />
     <Compile Include="Scripts\Team.cs" />
     <Compile Include="Scripts\Utilities.cs" />
     <Compile Include="Scripts\WindowManager.cs" />
+    <Compile Include="Windows\RoomScoreboard.xaml.cs">
+      <DependentUpon>RoomScoreboard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\TeamWindow.xaml.cs">
       <DependentUpon>TeamWindow.xaml</DependentUpon>
     </Compile>
@@ -101,6 +108,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\RoomScoreboard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\TeamWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

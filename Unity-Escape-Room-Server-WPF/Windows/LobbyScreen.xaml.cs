@@ -12,32 +12,22 @@ namespace Unity_Escape_Room_Server_WPF
     /// </summary>
     public partial class LobbyScreen : Window
     {
-        System.Timers.Timer timer = new System.Timers.Timer(1000);
-        delegate void OnAsyncTick();
 
         public LobbyScreen()
         {
             InitializeComponent();
-            timer.Elapsed += Tick;
-            timer.Start();
-        }
-
-        private void Tick(object sender, ElapsedEventArgs e)
-        {
             LoadItemsToTable();
         }
 
         public void LoadItemsToTable()
         {
-            var sortedList = NetworkHandler.Instance.LobbyTeamsList.OrderBy(x => x.Value.Score);//.Select(p => p.Value).ToList();
+            var items = Database.GetResults();
+
+            var sortedList = items.OrderByDescending(x => int.Parse(x.Score));
 
             if (TeamDataGrid.Dispatcher.Thread != Thread.CurrentThread)
             {
-                var del = new OnAsyncTick(() =>
-                {
-                    TeamDataGrid.Items.Clear();
-                });
-                TeamDataGrid.Dispatcher.BeginInvoke(del, null);
+                TeamDataGrid.Dispatcher.Invoke(() => { TeamDataGrid.Items.Clear(); });
             }
             else
             {
@@ -48,15 +38,11 @@ namespace Unity_Escape_Room_Server_WPF
             {
                 if (TeamDataGrid.Dispatcher.Thread != Thread.CurrentThread)
                 {
-                    var del = new OnAsyncTick(() =>
-                    {                        
-                        TeamDataGrid.Items.Add(client.Value);
-                    });
-                    TeamDataGrid.Dispatcher.BeginInvoke(del, null);
+                    TeamDataGrid.Dispatcher.Invoke(() => { TeamDataGrid.Items.Add(client); });
                 }
                 else
                 {
-                    TeamDataGrid.Items.Add(client.Value);
+                    TeamDataGrid.Items.Add(client);
                 }
             }
         }
@@ -81,8 +67,6 @@ namespace Unity_Escape_Room_Server_WPF
             else
             {
                 WindowManager.SetWindowOpenState("lobby", false, this);
-                timer.Stop();
-                timer.Dispose();
                 this.Close();
             }
         }

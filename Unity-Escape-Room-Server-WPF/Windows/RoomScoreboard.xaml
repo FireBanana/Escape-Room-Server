@@ -1,0 +1,24 @@
+﻿<Window x:Name="ScoreboardWindow" x:Class="Unity_Escape_Room_Server_WPF.Windows.RoomScoreboard"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Unity_Escape_Room_Server_WPF.Windows"
+        mc:Ignorable="d"
+        Title="RoomScoreboard" Height="450" Width="800" ResizeMode="NoResize" WindowStyle="None" MouseDoubleClick="OnDoubleClick" MouseDown="OnMouseDown" Closed="OnWindowClosed">
+    <Grid>
+        <Label Content="Time Remaining" Margin="112,203,0,0" VerticalAlignment="Top" FontSize="24" HorizontalAlignment="Left" Width="181"/>
+        <Label Content="Score" Margin="0,203,172,0" FontSize="24" HorizontalAlignment="Right" Width="69" Height="42" VerticalAlignment="Top"/>
+        <Label x:Name="ScoreText" Content="0" Margin="0,139,84,0" FontSize="48" FontWeight="Bold" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Width="236" Height="74" VerticalAlignment="Top"/>
+        <Label x:Name="RemainingTimeText" Content="0" Margin="95,144,0,0" FontSize="48" FontWeight="Bold" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="236" Height="74" VerticalAlignment="Top"/>
+        <Label Content="Team Name:" Margin="262,91,398,0" VerticalAlignment="Top" FontSize="24" HorizontalAlignment="Center" Width="140"/>
+        <Label x:Name="TeamName" Content="team" Margin="401,78,35,0" VerticalAlignment="Top" FontSize="36" FontWeight="Bold" Height="56" HorizontalAlignment="Center" Width="364"/>
+        <Label Content="The Fifth Wall Society Recruitment Training Simulation" Margin="10,10,16,0" VerticalAlignment="Top" FontSize="24" HorizontalContentAlignment="Center"/>
+        <Label Content="CASE FILE: NA-900796-86" Margin="10,41,16,0" VerticalAlignment="Top" FontSize="24" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+        <Border BorderBrush="Black" BorderThickness="1" Margin="29,286,35,52.6">
+            <TextBox x:Name="HintBotText" TextWrapping="Wrap" FontSize="36" Margin="5.2,5.2,5.2,4.6"/>
+        </Border>
+        <Label Content="Hint Bot Says:" HorizontalAlignment="Left" Margin="29,260,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>
