@@ -12,6 +12,6 @@
         <Label Content="Server Address:" HorizontalAlignment="Left" Margin="29,28,0,0" VerticalAlignment="Top" Width="96"/>
         <Label Content="Teams:" HorizontalAlignment="Left" Margin="298,53,0,0" VerticalAlignment="Top" Width="181" FontSize="22" FontWeight="Bold" HorizontalContentAlignment="Center"/>
         <Button x:Name="LobbyOpenBtn" Content="Lobby Screen" HorizontalAlignment="Left" Margin="633,28,0,0" VerticalAlignment="Top" Width="129" Click="OnLobbyClick"/>
-        <Button x:Name="RoomScoreboardBtn" Content="Room Scoreboard" HorizontalAlignment="Left" Margin="633,53,0,0" VerticalAlignment="Top" Width="129" Click="OnRoomScoreboard" ToolTip="WARNING! This will delete all saved teams" IsCancel="True"/>
+        <Button x:Name="RoomScoreboardBtn" Content="Room Scoreboard" HorizontalAlignment="Left" Margin="633,53,0,0" VerticalAlignment="Top" Width="129" Click="OnRoomScoreboard" IsCancel="True"/>
     </Grid>
 </Window>
