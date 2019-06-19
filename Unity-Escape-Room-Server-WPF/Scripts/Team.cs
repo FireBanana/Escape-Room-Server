@@ -21,6 +21,8 @@ public class Team
     public int Time;
     public int ElapsedTime;
 
+    int previousMinute;
+
     Timer timer = new Timer(1000);
 
     public Team(string name)
@@ -57,11 +59,20 @@ public class Team
         FormattedTime = Utilities.SecondsToFormattedString(Time);
         FormattedElapsedTime = Utilities.SecondsToFormattedString(ElapsedTime);
 
+        var currentMinute = Utilities.GetMinutes(ElapsedTime);
+
+        if (previousMinute != currentMinute)
+        {
+            previousMinute = currentMinute;
+            Score -= 25;
+        }
+
         if(WindowManager.IsWindowOpen(Name))
         {
             var window = WindowManager.GetWindow(Name);
             var teamWindow = (TeamWindow)window;
             teamWindow.UpdateTimerText(FormattedTime);
+            teamWindow.UpdateScoreText(Score.ToString());
         }
     }
 

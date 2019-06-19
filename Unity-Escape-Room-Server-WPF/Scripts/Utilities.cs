@@ -14,4 +14,10 @@ public static class Utilities
         else
             return time.Minutes + ":0" + time.Seconds;
     }
+
+    public static int GetMinutes(int seconds)
+    {
+        TimeSpan time = TimeSpan.FromSeconds(seconds);
+        return time.Minutes;
+    }
 }
