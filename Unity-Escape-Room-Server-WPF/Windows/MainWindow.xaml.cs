@@ -152,7 +152,7 @@ namespace Unity_Escape_Room_Server_WPF
             }
 
             var newScoreboard = new RoomScoreboard(null);
-            WindowManager.SetWindowOpenState("lobby", true, newScoreboard);
+            WindowManager.SetWindowOpenState("scoreboard", true, newScoreboard);
             newScoreboard.Show();
         }
     }
