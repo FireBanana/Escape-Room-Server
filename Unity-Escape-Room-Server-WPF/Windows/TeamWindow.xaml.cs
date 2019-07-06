@@ -97,16 +97,13 @@ namespace Unity_Escape_Room_Server_WPF.Windows
 
         private void OnPauseClick(object sender, RoutedEventArgs e)
         {
-            if(currentTeam.IsPaused)
-            {
-                currentTeam.IsPaused = false;
-            }
-            else
-            {
-                currentTeam.IsPaused = true;
-            }
-
+            currentTeam.Pause();
             NetworkHandler.Instance.SendPauseCommand(TeamName, currentTeam.IsPaused);
+        }
+
+        private void HintbotReadyClick(object sender, RoutedEventArgs e)
+        {
+            NetworkHandler.Instance.SendHintResponse(TeamName, "Hintbot is ready!");
         }
     }
 }

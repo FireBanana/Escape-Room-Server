@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,9 +29,11 @@ public class Team
     public Team(string name)
     {
         Name = name;
-        Time = 2700;
+        Time = 3600;
         timer.Elapsed += TimerElapsed;
         timer.Start();
+        Score = 1500;
+
 
         //Start scoreboard
         if (WindowManager.IsWindowOpen("scoreboard"))
@@ -59,13 +62,13 @@ public class Team
         FormattedTime = Utilities.SecondsToFormattedString(Time);
         FormattedElapsedTime = Utilities.SecondsToFormattedString(ElapsedTime);
 
-        var currentMinute = Utilities.GetMinutes(ElapsedTime);
+        //var currentMinute = Utilities.GetMinutes(ElapsedTime);
 
-        if (previousMinute != currentMinute)
-        {
-            previousMinute = currentMinute;
-            Score -= 25;
-        }
+        //if (previousMinute != currentMinute)
+        //{
+        //    previousMinute = currentMinute;
+        //    Score -= 25;
+        //}
 
         if(WindowManager.IsWindowOpen(Name))
         {
@@ -88,9 +91,33 @@ public class Team
         }
     }
 
-    public void Stop()
+    public void Pause()
     {
+        //toggle
+        if (IsPaused)
+        {
+            IsPaused = false;
+            timer.Start();
+        }
+        else
+        {
+            IsPaused = true;
+            timer.Stop();
+        }
+    }
+
+    public void Stop(string time)
+    {
+        if(time != null)
+        {
+            var deviceTime = int.Parse(time);
+            ElapsedTime = deviceTime - 1;
+
+            Time = 3601 - deviceTime;
+        }
+
         timer.Stop();
+        TimerElapsed(null, null);
         FinalTime = FormattedElapsedTime;
 
         if (WindowManager.IsWindowOpen(Name))

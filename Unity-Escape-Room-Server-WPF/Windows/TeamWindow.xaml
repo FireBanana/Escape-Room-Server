@@ -33,7 +33,7 @@
         </ListBox>
         <Button x:Name="SendHintBtn" Content="Send" HorizontalAlignment="Left" Margin="216,404,0,0" VerticalAlignment="Top" Width="156" Height="42" Click="OnPreMadeHintSend"/>
         <Label Content="Pre-made hints:" HorizontalAlignment="Left" Margin="55,213,0,0" VerticalAlignment="Top" Width="156" FontSize="14" FontWeight="Bold" Height="20" Padding="0"/>
-        <Button x:Name="HintbotReadyBtn" Content="Send Hintbot Ready" HorizontalAlignment="Left" Margin="519,162,0,0" VerticalAlignment="Top" Width="201" Height="42"/>
+        <Button x:Name="HintbotReadyBtn" Content="Send Hintbot Ready" HorizontalAlignment="Left" Margin="519,162,0,0" VerticalAlignment="Top" Width="201" Height="42" Click="HintbotReadyClick"/>
         <Button x:Name="SendTypedHintBtn" Content="Send" HorizontalAlignment="Left" Margin="564,404,0,0" VerticalAlignment="Top" Width="156" Height="42" Click="OnCustomHintSend"/>
         <Label Content="Custom hints:" HorizontalAlignment="Left" Margin="403,218,0,0" VerticalAlignment="Top" Width="156" FontSize="14" FontWeight="Bold" Height="20" Padding="0"/>
         <TextBox x:Name="HintTextBox" HorizontalAlignment="Left" Height="141" Margin="403,242,0,0" TextWrapping="Wrap" Text="Enter Hint..." VerticalAlignment="Top" Width="326"/>

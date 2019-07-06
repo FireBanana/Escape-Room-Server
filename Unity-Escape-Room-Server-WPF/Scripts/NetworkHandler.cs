@@ -159,7 +159,7 @@ namespace Unity_Escape_Room_Server_WPF
                                         break;
                                     case "gameQuit":                                        
                                         var quitPacket = JsonConvert.DeserializeObject<GameQuitPacket>(Encoding.ASCII.GetString(buffer));
-                                        TeamsList[quitPacket.TeamName].Stop();
+                                        TeamsList[quitPacket.TeamName].Stop(null);
                                         OnClientDisconnect(client);                                        
                                         return;
                                     case "pointsUpdate":
@@ -186,7 +186,7 @@ namespace Unity_Escape_Room_Server_WPF
                                     case "gameEnd":
                                         var gameEndPacket = JsonConvert.DeserializeObject<GameEndPacket>(Encoding.ASCII.GetString(buffer));
                                         TeamsList[gameEndPacket.TeamName].FinalChoice = gameEndPacket.FinalChoice;
-                                        TeamsList[gameEndPacket.TeamName].Stop();                                        
+                                        TeamsList[gameEndPacket.TeamName].Stop(gameEndPacket.FinalTime);                                        
                                        //TeamsList[gameEndPacket.TeamName].FinalTime = gameEndPacket.FinalTime;
                                         
                                         if(CompletedTeamList.ContainsKey(gameEndPacket.TeamName))
