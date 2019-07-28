@@ -160,6 +160,7 @@ namespace Unity_Escape_Room_Server_WPF
                                     case "gameQuit":                                        
                                         var quitPacket = JsonConvert.DeserializeObject<GameQuitPacket>(Encoding.ASCII.GetString(buffer));
                                         TeamsList[quitPacket.TeamName].Stop(null);
+                                        MessageBox.Show("Client disconnected through packet");
                                         OnClientDisconnect(client);                                        
                                         return;
                                     case "pointsUpdate":
@@ -181,6 +182,11 @@ namespace Unity_Escape_Room_Server_WPF
                                     case "helpRequest":
                                         var helpRequestPacket = JsonConvert.DeserializeObject<HelpRequestPacket>(Encoding.ASCII.GetString(buffer));
                                         MessageBox.Show("Help Request Received");
+                                        break;
+
+                                    case "clientTime":
+                                        var clientTimePacket = JsonConvert.DeserializeObject<ClientTimePacket>(Encoding.ASCII.GetString(buffer));
+                                        TeamsList[clientTimePacket.TeamName].TimedEvent.Invoke(null, null);
                                         break;
 
                                     case "gameEnd":

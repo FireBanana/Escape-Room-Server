@@ -76,6 +76,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="PacketCommands\ClientTimePacket.cs" />
     <Compile Include="PacketCommands\GameEndPacket.cs" />
     <Compile Include="PacketCommands\GameQuitPacket.cs" />
     <Compile Include="PacketCommands\HintResponsePacket.cs" />

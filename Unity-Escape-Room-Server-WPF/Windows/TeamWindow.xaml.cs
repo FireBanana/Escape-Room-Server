@@ -101,6 +101,17 @@ namespace Unity_Escape_Room_Server_WPF.Windows
             NetworkHandler.Instance.SendPauseCommand(TeamName, currentTeam.IsPaused);
         }
 
+        public void ChangePauseStatus(bool status)
+        {
+            PauseStatusBtn.Dispatcher.Invoke(() =>
+            {
+                if (status)
+                    PauseStatusBtn.Content = "Game is paused";
+                else
+                    PauseStatusBtn.Content = "Game is unpaused";
+            });
+        }
+
         private void HintbotReadyClick(object sender, RoutedEventArgs e)
         {
             NetworkHandler.Instance.SendHintResponse(TeamName, "Hintbot is ready!");

@@ -22,25 +22,29 @@ public class Team
     public int Time;
     public int ElapsedTime;
 
-    int previousMinute;
+    int hiddenScore { get; set; }
 
-    Timer timer = new Timer(1000);
-
+    //Timer timer = new Timer(1000);
+    public delegate void TimerEvent(object sender, ElapsedEventArgs e);
+    public TimerEvent TimedEvent;
+      
     public Team(string name)
     {
         Name = name;
         Time = 3600;
-        timer.Elapsed += TimerElapsed;
-        timer.Start();
+        //timer.Elapsed += TimerElapsed;
+        //timer.Start();
+        TimedEvent += TimerElapsed;
         Score = 1500;
-
+        hiddenScore = 1500;
 
         //Start scoreboard
         if (WindowManager.IsWindowOpen("scoreboard"))
         {
             var scoreboardWindow = (RoomScoreboard)WindowManager.GetWindow("scoreboard");
             scoreboardWindow.Reset(this);
-            timer.Elapsed += scoreboardWindow.Tick;
+            //timer.Elapsed += scoreboardWindow.Tick;
+            TimedEvent += scoreboardWindow.Tick;
         }
         else
         {
@@ -50,12 +54,13 @@ public class Team
                 scoreboardWindow.Show();
                 WindowManager.SetWindowOpenState("scoreboard", true, scoreboardWindow);
                 scoreboardWindow.Reset(this);
-                timer.Elapsed += scoreboardWindow.Tick;
+                //timer.Elapsed += scoreboardWindow.Tick;
+                TimedEvent += scoreboardWindow.Tick;
             });
         }
     }
 
-    private void TimerElapsed(object sender, ElapsedEventArgs e)
+    public void TimerElapsed(object sender, ElapsedEventArgs e)
     {
         Time -= 1;
         ElapsedTime += 1;
@@ -79,9 +84,12 @@ public class Team
         }
     }
 
-    public void UpdatePoints(int newPoints)
+    public void UpdatePoints(int newPoints) 
     {
-        Score = newPoints;
+        if(newPoints > hiddenScore)
+            Score = newPoints;
+
+        hiddenScore = newPoints;
 
         if (WindowManager.IsWindowOpen(Name))
         {
@@ -93,21 +101,30 @@ public class Team
 
     public void Pause()
     {
+        if (WindowManager.IsWindowOpen(Name))
+        {
+            var window = WindowManager.GetWindow(Name);
+            var teamWindow = (TeamWindow)window;
+            teamWindow.ChangePauseStatus(!IsPaused);
+        }
+
         //toggle
         if (IsPaused)
         {
             IsPaused = false;
-            timer.Start();
+            //timer.Start();
         }
         else
         {
             IsPaused = true;
-            timer.Stop();
+            //timer.Stop();
         }
     }
 
     public void Stop(string time)
     {
+        Score = hiddenScore;
+
         if(time != null)
         {
             var deviceTime = int.Parse(time);
@@ -116,7 +133,7 @@ public class Team
             Time = 3601 - deviceTime;
         }
 
-        timer.Stop();
+        //timer.Stop();
         TimerElapsed(null, null);
         FinalTime = FormattedElapsedTime;
 
