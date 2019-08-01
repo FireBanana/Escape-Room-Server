@@ -10,6 +10,7 @@ namespace EscapeRoomServer.PacketCommands
     {
         public HelpRequestPacket(string teamName)
         {
+            PacketId = "helpRequest";
             TeamName = teamName;
         }
     }

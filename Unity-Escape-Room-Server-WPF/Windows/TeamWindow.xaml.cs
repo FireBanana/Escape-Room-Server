@@ -70,6 +70,7 @@ namespace Unity_Escape_Room_Server_WPF.Windows
                 FinalChoiceText.Content = finalChoice;
                 FinalScoreText.Content = finalScore;
                 FinalTimeText.Content = finalTime;
+                ScoreText.Content = finalScore;
             });
         }
 

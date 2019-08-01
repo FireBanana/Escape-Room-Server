@@ -160,28 +160,28 @@ namespace Unity_Escape_Room_Server_WPF
                                     case "gameQuit":                                        
                                         var quitPacket = JsonConvert.DeserializeObject<GameQuitPacket>(Encoding.ASCII.GetString(buffer));
                                         TeamsList[quitPacket.TeamName].Stop(null);
-                                        MessageBox.Show("Client disconnected through packet");
+                                        Task.Run(() => { MessageBox.Show("Client disconnected through packet"); });
                                         OnClientDisconnect(client);                                        
                                         return;
                                     case "pointsUpdate":
                                         var pointsPacket = JsonConvert.DeserializeObject<PointsUpdatePacket>(Encoding.ASCII.GetString(buffer));
                                         if (TeamsList.ContainsKey(pointsPacket.TeamName))
                                         {
-                                            TeamsList[pointsPacket.TeamName].UpdatePoints(pointsPacket.NewPoints);
+                                            TeamsList[pointsPacket.TeamName].UpdatePoints(pointsPacket.NewPoints, pointsPacket.IsHidden);
                                         }
                                         else
-                                            MessageBox.Show("Trying to update points of non-existant team");
+                                            Task.Run(() => { MessageBox.Show("Trying to update points of non-existant team"); });
 
                                         break;
 
                                     case "hintRequest":
                                         var hintRequestPacket = JsonConvert.DeserializeObject<HintRequestPacket>(Encoding.ASCII.GetString(buffer));
-                                        MessageBox.Show("Hint Request Received");
+                                        Task.Run(() => { MessageBox.Show("Hint Request Received"); });                                        
                                         break;
 
                                     case "helpRequest":
                                         var helpRequestPacket = JsonConvert.DeserializeObject<HelpRequestPacket>(Encoding.ASCII.GetString(buffer));
-                                        MessageBox.Show("Help Request Received");
+                                        Task.Run(() => { MessageBox.Show("Help Request Received"); });
                                         break;
 
                                     case "clientTime":
@@ -197,7 +197,7 @@ namespace Unity_Escape_Room_Server_WPF
                                         
                                         if(CompletedTeamList.ContainsKey(gameEndPacket.TeamName))
                                         {
-                                            MessageBox.Show("Error: A team whose name already exists has completed the game.");
+                                            Task.Run(() => { MessageBox.Show("A team whose name already exists has completed the game."); });
                                         }
                                         else
                                         {

@@ -49,6 +49,17 @@ namespace Unity_Escape_Room_Server_WPF.Windows
             });
         }
 
+        /// <summary>
+        /// For manually setting points
+        /// </summary>
+        public void SetPoints(int points)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                ScoreText.Content = points;
+            });
+        }
+
         public void DisplayMessage(string message)
         {
             Dispatcher.Invoke(() =>

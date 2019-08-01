@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
 using Unity_Escape_Room_Server_WPF;
 using Unity_Escape_Room_Server_WPF.Windows;
 
@@ -13,7 +14,7 @@ public class Team
     public string Name { get; set; }
     public string FormattedTime;
     public string FormattedElapsedTime { get; set; }
-    public int Score { get; set; }
+    public int Score { get { return totalScore + hiddenScore; } }
     public string FinalChoice { get; set; }
     public string FinalTime { get; set; }
     public int HintsUsed;
@@ -23,6 +24,7 @@ public class Team
     public int ElapsedTime;
 
     int hiddenScore { get; set; }
+    int totalScore { get; set; }
 
     //Timer timer = new Timer(1000);
     public delegate void TimerEvent(object sender, ElapsedEventArgs e);
@@ -31,12 +33,11 @@ public class Team
     public Team(string name)
     {
         Name = name;
-        Time = 3600;
+        Time = 300;
         //timer.Elapsed += TimerElapsed;
         //timer.Start();
         TimedEvent += TimerElapsed;
-        Score = 1500;
-        hiddenScore = 1500;
+        totalScore = 1500;
 
         //Start scoreboard
         if (WindowManager.IsWindowOpen("scoreboard"))
@@ -84,12 +85,12 @@ public class Team
         }
     }
 
-    public void UpdatePoints(int newPoints) 
+    public void UpdatePoints(int newPoints, bool isHidden) 
     {
-        if(newPoints > hiddenScore)
-            Score = newPoints;
+        if (isHidden)
+            hiddenScore += Math.Abs(newPoints - totalScore);
 
-        hiddenScore = newPoints;
+        totalScore = newPoints;
 
         if (WindowManager.IsWindowOpen(Name))
         {
@@ -123,14 +124,12 @@ public class Team
 
     public void Stop(string time)
     {
-        Score = hiddenScore;
-
         if(time != null)
         {
             var deviceTime = int.Parse(time);
             ElapsedTime = deviceTime - 1;
 
-            Time = 3601 - deviceTime;
+            //Time = 3601 - deviceTime;
         }
 
         //timer.Stop();
@@ -142,8 +141,14 @@ public class Team
             var window = WindowManager.GetWindow(Name);
             var teamWindow = (TeamWindow)window;
 
-            teamWindow.UpdateFinalItems(FinalChoice, Score.ToString(), FinalTime);
-            Database.AddEntry(Name, Score.ToString(), FinalTime);
+            teamWindow.UpdateFinalItems(FinalChoice, (totalScore).ToString(), FinalTime);
+            Database.AddEntry(Name, (totalScore).ToString(), FinalTime);
+        }
+
+        if(WindowManager.IsWindowOpen("scoreboard"))
+        {
+            var roomScoreboard = (RoomScoreboard)WindowManager.GetWindow("scoreboard");
+            roomScoreboard.SetPoints(totalScore);
         }
 
         if (WindowManager.IsWindowOpen("lobby"))
