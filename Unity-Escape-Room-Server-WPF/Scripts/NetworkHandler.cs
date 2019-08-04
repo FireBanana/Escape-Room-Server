@@ -159,7 +159,10 @@ namespace Unity_Escape_Room_Server_WPF
                                         break;
                                     case "gameQuit":                                        
                                         var quitPacket = JsonConvert.DeserializeObject<GameQuitPacket>(Encoding.ASCII.GetString(buffer));
-                                        TeamsList[quitPacket.TeamName].Stop(null);
+                                        if(TeamsList.ContainsKey(quitPacket.TeamName))
+                                            TeamsList[quitPacket.TeamName].Stop(null);
+                                        else
+                                            Task.Run(() => { MessageBox.Show("Disconnecting Team not found"); });
                                         Task.Run(() => { MessageBox.Show("Client disconnected through packet"); });
                                         OnClientDisconnect(client);                                        
                                         return;

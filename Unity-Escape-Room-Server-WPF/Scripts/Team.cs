@@ -33,7 +33,7 @@ public class Team
     public Team(string name)
     {
         Name = name;
-        Time = 300;
+        Time = 600;
         //timer.Elapsed += TimerElapsed;
         //timer.Start();
         TimedEvent += TimerElapsed;
