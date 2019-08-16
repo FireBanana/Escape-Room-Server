@@ -11,6 +11,7 @@ using System.Windows;
 using System.Linq;
 using System.Net.NetworkInformation;
 using Unity_Escape_Room_Server_WPF.Windows;
+using System.IO;
 
 namespace Unity_Escape_Room_Server_WPF
 {
@@ -219,13 +220,27 @@ namespace Unity_Escape_Room_Server_WPF
                             }
                             catch (Exception e)
                             {
-                                MessageBox.Show("Error: " + e.Message);
+                                Task.Run(() => {
+                                    MessageBox.Show("First Error in NetworkHandler: " + e.Message + "\n\n" + e.StackTrace + "\n\n" + e.InnerException);
+                                    var builder = new StringBuilder();
+
+                                    foreach(var item in e.Data)
+                                    {
+                                        builder.Append(item.ToString() + "\n");
+                                    }
+
+                                    File.WriteAllText(@"C:\Users\Owais\Desktop\log.txt", builder.ToString());
+                                });
                             }
                         }
                         catch (Exception e)
                         {
-                            Debug.Print("Transfer Error: " + e.ToString());                   
-                            OnClientDisconnect(client);
+                            Task.Run(() =>
+                            {
+                                MessageBox.Show("Transfer Error: " + e.ToString());
+                                OnClientDisconnect(client);
+
+                            });
                             break;
                         }
                     }

@@ -33,7 +33,7 @@ public class Team
     public Team(string name)
     {
         Name = name;
-        Time = 600;
+        Time = 180;
         //timer.Elapsed += TimerElapsed;
         //timer.Start();
         TimedEvent += TimerElapsed;
@@ -124,38 +124,45 @@ public class Team
 
     public void Stop(string time)
     {
-        if(time != null)
+        try
         {
-            var deviceTime = int.Parse(time);
-            ElapsedTime = deviceTime - 1;
+            if (time != null)
+            {
+                var deviceTime = int.Parse(time);
+                ElapsedTime = deviceTime - 1;
 
-            //Time = 3601 - deviceTime;
+                //Time = 3601 - deviceTime;
+            }
+
+            //timer.Stop();
+            TimerElapsed(null, null);
+            FinalTime = FormattedElapsedTime;
+
+            if (WindowManager.IsWindowOpen(Name))
+            {
+                var window = WindowManager.GetWindow(Name);
+                var teamWindow = (TeamWindow)window;
+
+                teamWindow.UpdateFinalItems(FinalChoice, (totalScore).ToString(), FinalTime);
+                Database.AddEntry(Name, (totalScore).ToString(), FinalTime);
+            }
+
+            if (WindowManager.IsWindowOpen("scoreboard"))
+            {
+                var roomScoreboard = (RoomScoreboard)WindowManager.GetWindow("scoreboard");
+                roomScoreboard.SetPoints(totalScore);
+            }
+
+            if (WindowManager.IsWindowOpen("lobby"))
+            {
+                var window = WindowManager.GetWindow("lobby");
+                var lobbyWindow = (LobbyScreen)window;
+                lobbyWindow.LoadItemsToTable();
+            }
         }
-
-        //timer.Stop();
-        TimerElapsed(null, null);
-        FinalTime = FormattedElapsedTime;
-
-        if (WindowManager.IsWindowOpen(Name))
+        catch(Exception e)
         {
-            var window = WindowManager.GetWindow(Name);
-            var teamWindow = (TeamWindow)window;
-
-            teamWindow.UpdateFinalItems(FinalChoice, (totalScore).ToString(), FinalTime);
-            Database.AddEntry(Name, (totalScore).ToString(), FinalTime);
-        }
-
-        if(WindowManager.IsWindowOpen("scoreboard"))
-        {
-            var roomScoreboard = (RoomScoreboard)WindowManager.GetWindow("scoreboard");
-            roomScoreboard.SetPoints(totalScore);
-        }
-
-        if (WindowManager.IsWindowOpen("lobby"))
-        {
-            var window = WindowManager.GetWindow("lobby");
-            var lobbyWindow = (LobbyScreen)window;
-            lobbyWindow.LoadItemsToTable();
+            Task.Run(() => { MessageBox.Show("Error in Team: " + e.Message + "\n\n" + e.Data); });
         }
     }
 
