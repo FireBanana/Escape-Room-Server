@@ -33,7 +33,7 @@ public class Team
     public Team(string name)
     {
         Name = name;
-        Time = 180;
+        Time = 3600;
         //timer.Elapsed += TimerElapsed;
         //timer.Start();
         TimedEvent += TimerElapsed;
@@ -122,7 +122,7 @@ public class Team
         }
     }
 
-    public void Stop(string time)
+    public void Stop(string time, int finalPoints)
     {
         try
         {
@@ -143,14 +143,14 @@ public class Team
                 var window = WindowManager.GetWindow(Name);
                 var teamWindow = (TeamWindow)window;
 
-                teamWindow.UpdateFinalItems(FinalChoice, (totalScore).ToString(), FinalTime);
-                Database.AddEntry(Name, (totalScore).ToString(), FinalTime);
+                teamWindow.UpdateFinalItems(FinalChoice, finalPoints.ToString(), FinalTime);
+                Database.AddEntry(Name, finalPoints.ToString(), FinalTime);
             }
 
             if (WindowManager.IsWindowOpen("scoreboard"))
             {
                 var roomScoreboard = (RoomScoreboard)WindowManager.GetWindow("scoreboard");
-                roomScoreboard.SetPoints(totalScore);
+                roomScoreboard.SetPoints(finalPoints);
             }
 
             if (WindowManager.IsWindowOpen("lobby"))
