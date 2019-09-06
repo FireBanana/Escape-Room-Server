@@ -122,9 +122,9 @@ namespace Unity_Escape_Room_Server_WPF
         {
             Task.Run(() =>
             {
-
                 while (true)
                 {
+
                     if (client.Connected)
                     {
                         try
@@ -134,87 +134,108 @@ namespace Unity_Escape_Room_Server_WPF
 
                             var buffer = new byte[client.ReceiveBufferSize];
                             client.GetStream().Read(buffer, 0, buffer.Length);
+
+                            var reader = new JsonTextReader(new StringReader(Encoding.ASCII.GetString(buffer)));
+                            reader.SupportMultipleContent = true;
+
+                            var packetList = new List<Packet>();
                             try
                             {
-                                var packet = JsonConvert.DeserializeObject<Packet>(Encoding.ASCII.GetString(buffer));
-
-                                switch (packet.PacketId)
+                                while (true)
                                 {
-                                    case "authentication":
-                                        var authPacket = JsonConvert.DeserializeObject<AuthenticationPacket>(Encoding.ASCII.GetString(buffer));
-                                        SendAuthenticationResponse(client, "null");
-                                        OnClientConnected.Invoke(authPacket.TeamName, client);
-
-                                        if (!TeamsList.ContainsKey(authPacket.TeamName))
-                                        {
-                                            var newTeam = new Team(authPacket.TeamName);
-                                            TeamsList.Add(authPacket.TeamName, newTeam);
-                                            //LobbyTeamsList.Add(authPacket.TeamName, newTeam);
-                                        }
-
-                                        if(!ClientList.ContainsKey(authPacket.TeamName))
-                                        {
-                                            ClientList.Add(authPacket.TeamName, client);
-                                        }
-
+                                    if (!reader.Read())
+                                    {
                                         break;
-                                    case "gameQuit":                                        
-                                        var quitPacket = JsonConvert.DeserializeObject<GameQuitPacket>(Encoding.ASCII.GetString(buffer));
-                                        if(TeamsList.ContainsKey(quitPacket.TeamName))
-                                            TeamsList[quitPacket.TeamName].Stop(null, 0);
-                                        else
-                                            Task.Run(() => { MessageBox.Show("Disconnecting Team not found"); });
-                                        Task.Run(() => { MessageBox.Show("Client disconnected through packet"); });
-                                        OnClientDisconnect(client);                                        
-                                        return;
-                                    case "pointsUpdate":
-                                        var pointsPacket = JsonConvert.DeserializeObject<PointsUpdatePacket>(Encoding.ASCII.GetString(buffer));
-                                        if (TeamsList.ContainsKey(pointsPacket.TeamName))
-                                        {
-                                            TeamsList[pointsPacket.TeamName].UpdatePoints(pointsPacket.NewPoints, pointsPacket.IsHidden);
-                                        }
-                                        else
-                                            Task.Run(() => { MessageBox.Show("Trying to update points of non-existant team"); });
+                                    }
 
-                                        break;
+                                    JsonSerializer serializer = new JsonSerializer();
+                                    Packet _packet = serializer.Deserialize<Packet>(reader);
 
-                                    case "hintRequest":
-                                        var hintRequestPacket = JsonConvert.DeserializeObject<HintRequestPacket>(Encoding.ASCII.GetString(buffer));
-                                        Task.Run(() => { MessageBox.Show("Hint Request Received"); });                                        
-                                        break;
+                                    packetList.Add(_packet);
+                                }
 
-                                    case "helpRequest":
-                                        var helpRequestPacket = JsonConvert.DeserializeObject<HelpRequestPacket>(Encoding.ASCII.GetString(buffer));
-                                        Task.Run(() => { MessageBox.Show("Help Request Received"); });
-                                        break;
+                                foreach (var packet in packetList)
+                                {
+                                    //var packet = JsonConvert.DeserializeObject<Packet>(Encoding.ASCII.GetString(buffer));
 
-                                    case "clientTime":
-                                        var clientTimePacket = JsonConvert.DeserializeObject<ClientTimePacket>(Encoding.ASCII.GetString(buffer));
-                                        TeamsList[clientTimePacket.TeamName].TimedEvent.Invoke(null, null);
-                                        break;
+                                    switch (packet.PacketId)
+                                    {
+                                        case "authentication":
+                                            var authPacket = JsonConvert.DeserializeObject<AuthenticationPacket>(Encoding.ASCII.GetString(buffer));
+                                            SendAuthenticationResponse(client, "null");
+                                            OnClientConnected.Invoke(authPacket.TeamName, client);
 
-                                    case "gameEnd":
-                                        var gameEndPacket = JsonConvert.DeserializeObject<GameEndPacket>(Encoding.ASCII.GetString(buffer));
-                                        TeamsList[gameEndPacket.TeamName].FinalChoice = gameEndPacket.FinalChoice;
-                                        TeamsList[gameEndPacket.TeamName].Stop(gameEndPacket.FinalTime, gameEndPacket.FinalScore);
-                                       //TeamsList[gameEndPacket.TeamName].FinalTime = gameEndPacket.FinalTime;
-                                        
-                                        if(CompletedTeamList.ContainsKey(gameEndPacket.TeamName))
-                                        {
-                                            Task.Run(() => { MessageBox.Show("A team whose name already exists has completed the game."); });
-                                        }
-                                        else
-                                        {
-                                            CompletedTeamList.Add(gameEndPacket.TeamName, TeamsList[gameEndPacket.TeamName]);
-                                            MainWindow.Instance.RemoveFromList(client);
-                                            if (WindowManager.IsWindowOpen("lobby"))
+                                            if (!TeamsList.ContainsKey(authPacket.TeamName))
                                             {
-                                                ((LobbyScreen)WindowManager.GetWindow("lobby")).LoadItemsToTable();
+                                                var newTeam = new Team(authPacket.TeamName);
+                                                TeamsList.Add(authPacket.TeamName, newTeam);
+                                                //LobbyTeamsList.Add(authPacket.TeamName, newTeam);
                                             }
 
-                                            TeamsList.Remove(gameEndPacket.TeamName);
-                                        }
-                                        break;
+                                            if (!ClientList.ContainsKey(authPacket.TeamName))
+                                            {
+                                                ClientList.Add(authPacket.TeamName, client);
+                                            }
+
+                                            break;
+                                        case "gameQuit":
+                                            var quitPacket = JsonConvert.DeserializeObject<GameQuitPacket>(Encoding.ASCII.GetString(buffer));
+                                            if (TeamsList.ContainsKey(quitPacket.TeamName))
+                                                TeamsList[quitPacket.TeamName].Stop(null, 0);
+                                            else
+                                                Task.Run(() => { MessageBox.Show("Disconnecting Team not found"); });
+                                            Task.Run(() => { MessageBox.Show("Client disconnected through packet"); });
+                                            OnClientDisconnect(client);
+                                            return;
+                                        case "pointsUpdate":
+                                            var pointsPacket = JsonConvert.DeserializeObject<PointsUpdatePacket>(Encoding.ASCII.GetString(buffer));
+                                            if (TeamsList.ContainsKey(pointsPacket.TeamName))
+                                            {
+                                                TeamsList[pointsPacket.TeamName].UpdatePoints(pointsPacket.NewPoints, pointsPacket.IsHidden);
+                                            }
+                                            else
+                                                Task.Run(() => { MessageBox.Show("Trying to update points of non-existant team"); });
+
+                                            break;
+
+                                        case "hintRequest":
+                                            var hintRequestPacket = JsonConvert.DeserializeObject<HintRequestPacket>(Encoding.ASCII.GetString(buffer));
+                                            Task.Run(() => { MessageBox.Show("Hint Request Received"); });
+                                            break;
+
+                                        case "helpRequest":
+                                            var helpRequestPacket = JsonConvert.DeserializeObject<HelpRequestPacket>(Encoding.ASCII.GetString(buffer));
+                                            Task.Run(() => { MessageBox.Show("Help Request Received"); });
+                                            break;
+
+                                        case "clientTime":
+                                            var clientTimePacket = JsonConvert.DeserializeObject<ClientTimePacket>(Encoding.ASCII.GetString(buffer));
+                                            TeamsList[clientTimePacket.TeamName].TimedEvent.Invoke(null, null);
+                                            break;
+
+                                        case "gameEnd":
+                                            var gameEndPacket = JsonConvert.DeserializeObject<GameEndPacket>(Encoding.ASCII.GetString(buffer));
+                                            TeamsList[gameEndPacket.TeamName].FinalChoice = gameEndPacket.FinalChoice;
+                                            TeamsList[gameEndPacket.TeamName].Stop(gameEndPacket.FinalTime, gameEndPacket.FinalScore);
+                                            //TeamsList[gameEndPacket.TeamName].FinalTime = gameEndPacket.FinalTime;
+
+                                            if (CompletedTeamList.ContainsKey(gameEndPacket.TeamName))
+                                            {
+                                                Task.Run(() => { MessageBox.Show("A team whose name already exists has completed the game."); });
+                                            }
+                                            else
+                                            {
+                                                CompletedTeamList.Add(gameEndPacket.TeamName, TeamsList[gameEndPacket.TeamName]);
+                                                MainWindow.Instance.RemoveFromList(client);
+                                                if (WindowManager.IsWindowOpen("lobby"))
+                                                {
+                                                    ((LobbyScreen)WindowManager.GetWindow("lobby")).LoadItemsToTable();
+                                                }
+
+                                                TeamsList.Remove(gameEndPacket.TeamName);
+                                            }
+                                            break;
+                                    }
                                 }
                                 
                             }
