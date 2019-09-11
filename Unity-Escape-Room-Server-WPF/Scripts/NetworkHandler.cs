@@ -242,15 +242,15 @@ namespace Unity_Escape_Room_Server_WPF
                             catch (Exception e)
                             {
                                 Task.Run(() => {
-                                    MessageBox.Show("First Error in NetworkHandler: " + e.Message + "\n\n" + e.StackTrace + "\n\n" + e.InnerException);
-                                    var builder = new StringBuilder();
+                                    //MessageBox.Show("First Error in NetworkHandler: " + e.Message + "\n\n" + e.StackTrace + "\n\n" + e.InnerException);
+                                    //var builder = new StringBuilder();
 
-                                    foreach(var item in e.Data)
-                                    {
-                                        builder.Append(item.ToString() + "\n");
-                                    }
+                                    //foreach (var item in e.Data)
+                                    //{
+                                    //    builder.Append(item.ToString() + "\n");
+                                    //}
 
-                                    File.WriteAllText(@"C:\Users\Owais\Desktop\log.txt", builder.ToString());
+                                    //File.WriteAllText(@"C:\Users\Owais\Desktop\log.txt", builder.ToString());
                                 });
                             }
                         }
@@ -258,7 +258,7 @@ namespace Unity_Escape_Room_Server_WPF
                         {
                             Task.Run(() =>
                             {
-                                MessageBox.Show("Transfer Error: " + e.ToString());
+                                //MessageBox.Show("Transfer Error: " + e.ToString());
                                 OnClientDisconnect(client);
 
                             });
