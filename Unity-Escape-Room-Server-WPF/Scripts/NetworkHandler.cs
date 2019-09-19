@@ -181,7 +181,7 @@ namespace Unity_Escape_Room_Server_WPF
                                         case "gameQuit":
                                             var quitPacket = JsonConvert.DeserializeObject<GameQuitPacket>(Encoding.ASCII.GetString(buffer));
                                             if (TeamsList.ContainsKey(quitPacket.TeamName))
-                                                TeamsList[quitPacket.TeamName].Stop(null, 0);
+                                                TeamsList[quitPacket.TeamName].Stop(1, 0);
                                             else
                                                 Task.Run(() => { MessageBox.Show("Disconnecting Team not found"); });
                                             Task.Run(() => { MessageBox.Show("Client disconnected through packet"); });
@@ -210,7 +210,7 @@ namespace Unity_Escape_Room_Server_WPF
 
                                         case "clientTime":
                                             var clientTimePacket = JsonConvert.DeserializeObject<ClientTimePacket>(Encoding.ASCII.GetString(buffer));
-                                            TeamsList[clientTimePacket.TeamName].TimedEvent.Invoke(null, null);
+                                            TeamsList[clientTimePacket.TeamName].TimedEvent.Invoke(clientTimePacket.ElaspsedSeconds);                                
                                             break;
 
                                         case "gameEnd":

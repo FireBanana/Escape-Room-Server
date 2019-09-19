@@ -40,7 +40,7 @@ namespace Unity_Escape_Room_Server_WPF.Windows
             });
         }
 
-        public void Tick(object sender, ElapsedEventArgs e)
+        public void Tick(int time)
         {
             Dispatcher.Invoke(() =>
             {

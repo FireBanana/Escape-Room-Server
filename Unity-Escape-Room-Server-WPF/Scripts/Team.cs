@@ -27,13 +27,15 @@ public class Team
     int totalScore { get; set; }
 
     //Timer timer = new Timer(1000);
-    public delegate void TimerEvent(object sender, ElapsedEventArgs e);
+    public delegate void TimerEvent(int elapseTime);
     public TimerEvent TimedEvent;
-      
+
+    public const int TotalTime = 3600;
+
     public Team(string name)
     {
         Name = name;
-        Time = 3600;
+        Time = TotalTime;
         //timer.Elapsed += TimerElapsed;
         //timer.Start();
         TimedEvent += TimerElapsed;
@@ -50,7 +52,7 @@ public class Team
         else
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {                
+            {
                 var scoreboardWindow = new RoomScoreboard(this);
                 scoreboardWindow.Show();
                 WindowManager.SetWindowOpenState("scoreboard", true, scoreboardWindow);
@@ -61,12 +63,12 @@ public class Team
         }
     }
 
-    public void TimerElapsed(object sender, ElapsedEventArgs e)
+    public void TimerElapsed(int elapsedTime)
     {
         Time -= 1;
         ElapsedTime += 1;
-        FormattedTime = Utilities.SecondsToFormattedString(Time);
-        FormattedElapsedTime = Utilities.SecondsToFormattedString(ElapsedTime);
+        FormattedTime = Utilities.SecondsToFormattedString(TotalTime - elapsedTime);
+        FormattedElapsedTime = Utilities.SecondsToFormattedString(elapsedTime);
 
         //var currentMinute = Utilities.GetMinutes(ElapsedTime);
 
@@ -76,7 +78,7 @@ public class Team
         //    Score -= 25;
         //}
 
-        if(WindowManager.IsWindowOpen(Name))
+        if (WindowManager.IsWindowOpen(Name))
         {
             var window = WindowManager.GetWindow(Name);
             var teamWindow = (TeamWindow)window;
@@ -85,7 +87,7 @@ public class Team
         }
     }
 
-    public void UpdatePoints(int newPoints, bool isHidden) 
+    public void UpdatePoints(int newPoints, bool isHidden)
     {
         if (isHidden)
             hiddenScore += Math.Abs(newPoints - totalScore);
@@ -122,20 +124,14 @@ public class Team
         }
     }
 
-    public void Stop(string time, int finalPoints)
+    public void Stop(int time, int finalPoints)
     {
         try
         {
-            if (time != null)
-            {
-                var deviceTime = int.Parse(time);
-                ElapsedTime = deviceTime - 1;
-
-                //Time = 3601 - deviceTime;
-            }
+            ElapsedTime = time - 1;
 
             //timer.Stop();
-            TimerElapsed(null, null);
+            TimerElapsed(time);
             FinalTime = FormattedElapsedTime;
 
             if (WindowManager.IsWindowOpen(Name))
@@ -143,8 +139,7 @@ public class Team
                 var window = WindowManager.GetWindow(Name);
                 var teamWindow = (TeamWindow)window;
 
-                teamWindow.UpdateFinalItems(FinalChoice, finalPoints.ToString(), FinalTime);
-                Database.AddEntry(Name, finalPoints.ToString(), FinalTime);
+                teamWindow.UpdateFinalItems(FinalChoice, finalPoints.ToString(), FinalTime);                
             }
 
             if (WindowManager.IsWindowOpen("scoreboard"))
@@ -159,13 +154,15 @@ public class Team
                 var lobbyWindow = (LobbyScreen)window;
                 lobbyWindow.LoadItemsToTable();
             }
+
+            Database.AddEntry(Name, finalPoints.ToString(), FinalTime);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Task.Run(() => { MessageBox.Show("Error in Team: " + e.Message + "\n\n" + e.Data); });
         }
     }
 
-    
+
 }
 

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 public class ClientTimePacket : Packet
 {
-    public string Time { get; set; } 
+    public int ElaspsedSeconds { get; set; } //elapsed
 
-    public ClientTimePacket(string teamName, string time)
+    public ClientTimePacket(string teamName, int time)
     {
         PacketId = "clientTime";
         TeamName = teamName;
-        Time = time;
+        ElaspsedSeconds = time;
     }
 }

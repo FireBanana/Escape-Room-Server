@@ -7,16 +7,18 @@ using System.Threading.Tasks;
 public class GameEndPacket : Packet
 {
     public string FinalChoice;
-    public string FinalTime;
+    public int FinalTime;
     public int FinalScore;
+    //public int ElapsedTime;
 
-    public GameEndPacket(string teamName, string finalChoice, string finalTime, int finalScore)
+    public GameEndPacket(string teamName, string finalChoice, int finalTime, int finalScore /*int elapsedTime*/)
     {
         PacketId = "gameEnd";
         FinalChoice = finalChoice;
         FinalTime = finalTime;
         TeamName = teamName;
         FinalScore = finalScore;
+        //ElapsedTime = elapsedTime;
     }
 }
 
