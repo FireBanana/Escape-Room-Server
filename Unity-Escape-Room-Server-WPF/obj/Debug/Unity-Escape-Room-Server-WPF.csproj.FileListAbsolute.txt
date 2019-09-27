@@ -36,7 +36,6 @@ E:\UnityProjects\EscapeRoomServer\Escape-Room-Server\Unity-Escape-Room-Server-WP
 E:\UnityProjects\EscapeRoomServer\Escape-Room-Server\Unity-Escape-Room-Server-WPF\obj\Debug\Unity-Escape-Room-Server-WPF.g.resources
 E:\UnityProjects\EscapeRoomServer\Escape-Room-Server\Unity-Escape-Room-Server-WPF\obj\Debug\Unity_Escape_Room_Server_WPF.Properties.Resources.resources
 E:\UnityProjects\EscapeRoomServer\Escape-Room-Server\Unity-Escape-Room-Server-WPF\obj\Debug\Unity-Escape-Room-Server-WPF.csproj.GenerateResource.cache
-E:\UnityProjects\EscapeRoomServer\Escape-Room-Server\Unity-Escape-Room-Server-WPF\obj\Debug\Unity-Escape-Room-Server-WPF.csproj.CoreCompileInputs.cache
 E:\UnityProjects\EscapeRoomServer\Escape-Room-Server\Unity-Escape-Room-Server-WPF\obj\Debug\Unity-Escape-Room-Server-WPF.csproj.CopyComplete
 E:\UnityProjects\EscapeRoomServer\Escape-Room-Server\Unity-Escape-Room-Server-WPF\bin\Debug\LiteDB.dll
 E:\UnityProjects\EscapeRoomServer\Escape-Room-Server\Unity-Escape-Room-Server-WPF\bin\Debug\LiteDB.xml

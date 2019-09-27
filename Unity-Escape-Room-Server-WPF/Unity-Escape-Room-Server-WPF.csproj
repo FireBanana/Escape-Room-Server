@@ -78,6 +78,7 @@
     </ApplicationDefinition>
     <Compile Include="PacketCommands\ClientTimePacket.cs" />
     <Compile Include="PacketCommands\GameEndPacket.cs" />
+    <Compile Include="PacketCommands\GameEndRequestPacket.cs" />
     <Compile Include="PacketCommands\GameQuitPacket.cs" />
     <Compile Include="PacketCommands\HintResponsePacket.cs" />
     <Compile Include="Scripts\Database.cs" />

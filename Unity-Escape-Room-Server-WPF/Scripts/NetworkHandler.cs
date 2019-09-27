@@ -82,6 +82,17 @@ namespace Unity_Escape_Room_Server_WPF
             client.GetStream().Write(buff, 0, buff.Length);
         }
 
+        public void SendGameEnd(string teamName, int score)
+        {
+            var packet = new GameEndRequestPacket(teamName, score);
+
+            var client = ClientList[teamName];
+
+            var serializedPacket = JsonConvert.SerializeObject(packet);
+            var buff = Encoding.ASCII.GetBytes(serializedPacket);
+            client.GetStream().Write(buff, 0, buff.Length);
+        }
+
         public void SendHintResponse(string teamName, string hintDescription)
         {
             if(WindowManager.IsWindowOpen("scoreboard"))
@@ -181,7 +192,10 @@ namespace Unity_Escape_Room_Server_WPF
                                         case "gameQuit":
                                             var quitPacket = JsonConvert.DeserializeObject<GameQuitPacket>(Encoding.ASCII.GetString(buffer));
                                             if (TeamsList.ContainsKey(quitPacket.TeamName))
-                                                TeamsList[quitPacket.TeamName].Stop(1, 0);
+                                            {
+                                                TeamsList[quitPacket.TeamName].Stop();
+                                                TeamsList[quitPacket.TeamName].Timer.Stop();
+                                            }
                                             else
                                                 Task.Run(() => { MessageBox.Show("Disconnecting Team not found"); });
                                             Task.Run(() => { MessageBox.Show("Client disconnected through packet"); });
@@ -210,13 +224,13 @@ namespace Unity_Escape_Room_Server_WPF
 
                                         case "clientTime":
                                             var clientTimePacket = JsonConvert.DeserializeObject<ClientTimePacket>(Encoding.ASCII.GetString(buffer));
-                                            TeamsList[clientTimePacket.TeamName].TimedEvent.Invoke(clientTimePacket.ElaspsedSeconds);                                
+                                            //TeamsList[clientTimePacket.TeamName].TimedEvent.Invoke(clientTimePacket.ElaspsedSeconds);                                
                                             break;
 
                                         case "gameEnd":
                                             var gameEndPacket = JsonConvert.DeserializeObject<GameEndPacket>(Encoding.ASCII.GetString(buffer));
                                             TeamsList[gameEndPacket.TeamName].FinalChoice = gameEndPacket.FinalChoice;
-                                            TeamsList[gameEndPacket.TeamName].Stop(gameEndPacket.FinalTime, gameEndPacket.FinalScore);
+                                            TeamsList[gameEndPacket.TeamName].Stop();
                                             //TeamsList[gameEndPacket.TeamName].FinalTime = gameEndPacket.FinalTime;
 
                                             if (CompletedTeamList.ContainsKey(gameEndPacket.TeamName))

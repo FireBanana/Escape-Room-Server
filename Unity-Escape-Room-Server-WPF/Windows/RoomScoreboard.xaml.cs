@@ -21,6 +21,7 @@ namespace Unity_Escape_Room_Server_WPF.Windows
     public partial class RoomScoreboard : Window
     {
         Team currentTeam;
+        public static bool IsSet;
 
         public RoomScoreboard(Team team)
         {
@@ -40,7 +41,7 @@ namespace Unity_Escape_Room_Server_WPF.Windows
             });
         }
 
-        public void Tick(int time)
+        public void Tick(object sender, ElapsedEventArgs e)
         {
             Dispatcher.Invoke(() =>
             {
@@ -89,6 +90,7 @@ namespace Unity_Escape_Room_Server_WPF.Windows
 
         private void OnWindowClosed(object sender, EventArgs e)
         {
+            IsSet = false;
             WindowManager.SetWindowOpenState("scoreboard", false, this);
         }
     }
