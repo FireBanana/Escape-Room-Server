@@ -32,7 +32,7 @@ public class Team
     // delegate void TimerEvent(int elapseTime);
     //public TimerEvent TimedEvent;
 
-    public const int TotalTime = 180;
+    public const int TotalTime = 3600;
 
     public Team(string name)
     {
