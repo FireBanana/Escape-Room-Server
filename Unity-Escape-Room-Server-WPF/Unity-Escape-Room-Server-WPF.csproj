@@ -76,6 +76,33 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="LiteNetLib\BaseChannel.cs" />
+    <Compile Include="LiteNetLib\ConnectionRequest.cs" />
+    <Compile Include="LiteNetLib\INetEventListener.cs" />
+    <Compile Include="LiteNetLib\Layers\Crc32cLayer.cs" />
+    <Compile Include="LiteNetLib\Layers\PacketLayerBase.cs" />
+    <Compile Include="LiteNetLib\Layers\XorEncryptLayer.cs" />
+    <Compile Include="LiteNetLib\NatPunchModule.cs" />
+    <Compile Include="LiteNetLib\NetConstants.cs" />
+    <Compile Include="LiteNetLib\NetDebug.cs" />
+    <Compile Include="LiteNetLib\NetManager.cs" />
+    <Compile Include="LiteNetLib\NetPacket.cs" />
+    <Compile Include="LiteNetLib\NetPacketPool.cs" />
+    <Compile Include="LiteNetLib\NetPeer.cs" />
+    <Compile Include="LiteNetLib\NetSocket.cs" />
+    <Compile Include="LiteNetLib\NetStatistics.cs" />
+    <Compile Include="LiteNetLib\NetUtils.cs" />
+    <Compile Include="LiteNetLib\ReliableChannel.cs" />
+    <Compile Include="LiteNetLib\SequencedChannel.cs" />
+    <Compile Include="LiteNetLib\Utils\CRC32C.cs" />
+    <Compile Include="LiteNetLib\Utils\FastBitConverter.cs" />
+    <Compile Include="LiteNetLib\Utils\INetSerializable.cs" />
+    <Compile Include="LiteNetLib\Utils\NetDataReader.cs" />
+    <Compile Include="LiteNetLib\Utils\NetDataWriter.cs" />
+    <Compile Include="LiteNetLib\Utils\NetPacketProcessor.cs" />
+    <Compile Include="LiteNetLib\Utils\NetSerializer.cs" />
+    <Compile Include="LiteNetLib\Utils\NtpPacket.cs" />
+    <Compile Include="LiteNetLib\Utils\NtpRequest.cs" />
     <Compile Include="PacketCommands\ClientTimePacket.cs" />
     <Compile Include="PacketCommands\GameEndPacket.cs" />
     <Compile Include="PacketCommands\GameEndRequestPacket.cs" />
@@ -146,6 +173,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Resource Include="Fonts\PressStart2P.ttf" />
+    <None Include="LiteNetLib\LiteNetLib.csproj" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
