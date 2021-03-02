@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using LiteNetLib;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows;
@@ -13,7 +14,7 @@ namespace Unity_Escape_Room_Server_WPF
     public partial class MainWindow : Window
     {
         NetworkHandler handler;
-        public Dictionary<TcpClient, int> TeamListDictionary = new Dictionary<TcpClient, int>();
+        public Dictionary<NetPeer, int> TeamListDictionary = new Dictionary<NetPeer, int>();
         public static MainWindow Instance;
 
         delegate void UICallback();
@@ -58,14 +59,14 @@ namespace Unity_Escape_Room_Server_WPF
             };
         }
 
-        void AddToList(string name, TcpClient client)
+        void AddToList(string name, NetPeer client)
         {
             var pos = ClientListBox.Items.Add(name);
             if (!TeamListDictionary.ContainsKey(client))
                 TeamListDictionary.Add(client, pos);
         }
 
-        public void RemoveFromList(TcpClient client)
+        public void RemoveFromList(NetPeer client)
         {
             if (TeamListDictionary.ContainsKey(client))
             {

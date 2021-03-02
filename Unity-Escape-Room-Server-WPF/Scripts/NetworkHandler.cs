@@ -57,6 +57,10 @@ namespace Unity_Escape_Room_Server_WPF
 
             listener.PeerConnectedEvent += _peer =>
             {
+                //if (server.ConnectedPeersCount == 1)
+                //    return;
+
+                Task.Run(() => { MessageBox.Show("Team connected"); });
                 peer = _peer;
             };
 
@@ -67,7 +71,13 @@ namespace Unity_Escape_Room_Server_WPF
 
             listener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
             {
+                var buffer = new byte[dataReader.AvailableBytes];
+                dataReader.GetBytes(buffer, dataReader.AvailableBytes);
 
+                var packet = JsonConvert.DeserializeObject<Packet>(Encoding.ASCII.GetString(buffer));
+
+                ParsePacket(packet, buffer);
+                dataReader.Recycle();
             };
 
             Instance = this;
@@ -155,7 +165,7 @@ namespace Unity_Escape_Room_Server_WPF
                     var authPacket = JsonConvert.DeserializeObject<AuthenticationPacket>(Encoding.ASCII.GetString(buffer));
                     SendAuthenticationResponse("null");
                     OnClientConnected.Invoke(authPacket.TeamName, peer);
-
+                   
                     if (!TeamsList.ContainsKey(authPacket.TeamName))
                     {
                         var newTeam = new Team(authPacket.TeamName);
