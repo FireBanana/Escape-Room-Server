@@ -57,10 +57,8 @@ namespace Unity_Escape_Room_Server_WPF
 
             listener.PeerConnectedEvent += _peer =>
             {
-                //if (server.ConnectedPeersCount == 1)
-                //    return;
 
-                Task.Run(() => { MessageBox.Show("Team connected"); });
+                Task.Run(() => { MessageBox.Show("Device connected", "Alert"); });
                 peer = _peer;
             };
 
@@ -188,9 +186,9 @@ namespace Unity_Escape_Room_Server_WPF
                         TeamsList[quitPacket.TeamName].Timer.Stop();
                     }
                     else
-                        Task.Run(() => { MessageBox.Show("Disconnecting Team not found"); });
+                        Task.Run(() => { MessageBox.Show("Disconnecting team not found"); });
 
-                    Task.Run(() => { MessageBox.Show("Client disconnected through packet"); });
+                    Task.Run(() => { MessageBox.Show("Device Disconnected"); });
                     OnClientDisconnect();
                     return;
 
